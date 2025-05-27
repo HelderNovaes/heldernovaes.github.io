@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Pentagol - Reserva de Canchas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-o9N1jVv9yyL0zNG0BtEVpYzZR+V1K5G8UO8m5H6vR2o="
+    crossorigin=""
+  />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0 20px 40px;
+      background: #f0f0f0;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    header img {
+      width: 80px;
+      height: auto;
+    }
+
+    main {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .campos {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .campo {
+      flex: 1 1 calc(50% - 20px);
+      cursor: pointer;
+      background: white;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .campo:hover {
+      transform: scale(1.03);
+    }
+
+    .campo img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    /* Formulário (escondido inicialmente) */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 999;
+    }
+
+    #formulario {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      max-width: 400px;
+      width: 90%;
+      display: none;
+      z-index: 1000;
+    }
+
+    #formulario h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    #formulario input,
+    #formulario select {
+      width: 100%;
+      padding: 8px 12px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    #formulario input[readonly] {
+      background-color: #eee;
+    }
+
+    .btn-confirmar,
+    .btn-cancelar {
+      width: 48%;
+      padding: 10px;
+      font-weight: 700;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .btn-confirmar {
+      background-color: #28a745;
+      color: white;
+      margin-right: 4%;
+    }
+
+    .btn-cancelar {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    /* Mapa */
+    #mapid {
+      height: 400px;
+      margin-top: 40px;
+    }
+
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+    }
+
+    .redes-sociales img {
+      width: 24px;
+      margin: 0 6px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <img src="img/logo.jpg" alt="Logo Pentagol" />
+    <div>
+      <h1>Pentagol</h1>
+      <p>Reserva tu cancha en línea, fácil y rápido</p>
+    </div>
+  </header>
+
+  <main>
+    <div class="campos">
+      <div class="campo" onclick="abrirFormulario('Cancha 1')">
+        <img src="img/campo1.png" alt="Campo 1" />
+        <h3>Cancha de 7 jugadores</h3>
+      </div>
+      <div class="campo" onclick="abrirFormulario('Cancha 2')">
+        <img src="img/campo1.png" alt="Campo 2" />
+        <h3>Cancha de 6 jugadores</h3>
+      </div>
+      <div class="campo" onclick="abrirFormulario('Cancha 3')">
+        <img src="img/campo1.png" alt="Campo 3" />
+        <h3>Cancha de 5 jugadores</h3>
+      </div>
+      <div class="campo" onclick="abrirFormulario('Cancha 4')">
+        <img src="img/campo1.png" alt="Campo 4" />
+        <h3>Cancha de 5 jugadores</h3>
+      </div>
+    </div>
+
+    <div id="overlay" onclick="fecharFormulario()"></div>
+
+<form id="formulario" method="POST" action="#" onsubmit="return false;">
+  <h2 id="tituloCampo">Reserva</h2>
+
+  <input type="date" id="data" name="data" required />
+
+  <select id="hora" name="hora" required>
+    <option value="">Selecciona una hora</option>
+    <!-- Horarios aquí -->
+     <option value="06:00">06:00</option>
+        <option value="06:30">06:30</option>
+        <option value="07:00">07:00</option>
+        <option value="07:30">07:30</option>
+        <option value="08:00">08:00</option>
+        <option value="08:30">08:30</option>
+        <option value="09:00">09:00</option>
+        <option value="09:30">09:30</option>
+        <option value="10:00">10:00</option>
+        <option value="10:30">10:30</option>
+        <option value="11:00">11:00</option>
+        <option value="11:30">11:30</option>
+        <option value="12:00">12:00</option>
+        <option value="12:30">12:30</option>
+        <option value="13:00">13:00</option>
+        <option value="13:30">13:30</option>
+        <option value="14:00">14:00</option>
+        <option value="14:30">14:30</option>
+        <option value="15:00">15:00</option>
+        <option value="15:30">15:30</option>
+        <option value="16:00">16:00</option>
+        <option value="16:30">16:30</option>
+        <option value="17:00">17:00</option>
+        <option value="17:30">17:30</option>
+        <option value="18:00">18:00</option>
+        <option value="18:30">18:30</option>
+        <option value="19:00">19:00</option>
+        <option value="19:30">19:30</option>
+        <option value="20:00">20:00</option>
+        <option value="20:30">20:30</option>
+        <option value="21:00">21:00</option>
+        <option value="21:30">21:30</option>
+        <option value="22:00">22:00</option>
+        <option value="22:30">22:30</option>
+        <option value="23:00">23:00</option>
+        <option value="23:30">23:30</option>
+        <option value="00:00">00:00</option>
+  </select>
+
+  <input
+    type="number"
+    id="duracao"
+    name="duracao"
+    placeholder="Duración en horas"
+    min="1"
+    max="10"
+    oninput="calcularValor()"
+    required
+  />
+
+  <input
+    type="text"
+    id="cliente"
+    name="cliente"
+    placeholder="Nombre del cliente/equipo"
+    required
+  />
+
+   <input
+    type="text"
+    id="whatsapp"
+    name="whatsapp"
+    placeholder="Número de WhatsApp (ej. +59170123456)"
+    required
+  />
+
+  <input
+    type="email"
+    id="email"
+    name="email"
+    placeholder="Correo electrónico"
+    required
+  />
+
+  <input type="text" id="valorTotal" name="valorTotal" placeholder="Valor total" readonly />
+
+  <button type="button" class="btn-confirmar" onclick="enviarReserva()">Reservar</button>
+  <button type="button" class="btn-cancelar" onclick="fecharFormulario()">Cancelar</button>
+</form>
+
+   
+  </main>
+
+  <div id="mapid"></div>
+
+  <footer>
+    <p>&copy; 2025 Pentagol. Todos los derechos reservados.</p>
+    <div class="redes-sociales">
+      <a href="https://facebook.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/20/20673.png" alt="Facebook" /></a>
+      <a href="https://instagram.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" /></a>
+      <a href="https://twitter.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter" /></a>
+    </div>
+  </footer>
+
+  <!-- Leaflet JS -->
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+  <script>
+    // Variável global para a cancha selecionada
+    let campoSeleccionado = '';
+
+    // Preço por hora para cada cancha
+    const preciosPorHora = {
+      'Cancha 1': 150,
+      'Cancha 2': 150,
+      'Cancha 3': 170,
+      'Cancha 4': 170,
+    };
+
+    // Função para abrir o formulário e definir título e cancha selecionada
+function abrirFormulario(campo) {
+  campoSeleccionado = campo;
+  document.getElementById('tituloCampo').textContent = `Reserva - ${campo}`;
+  document.getElementById('formulario').style.display = 'block';
+  document.getElementById('overlay').style.display = 'block';
+
+  // Limpar campos e valor total
+  document.getElementById('data').value = '';
+  document.getElementById('hora').value = '';
+  document.getElementById('duracao').value = '';
+  document.getElementById('cliente').value = '';
+  document.getElementById('valorTotal').value = '';
+  document.getElementById('whatsapp').value = '';
+  document.getElementById('email').value = '';
+}
+
+    // Função para fechar o formulário
+    function fecharFormulario() {
+      document.getElementById('formulario').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
+
+    // Função para calcular o valor total com base na duração e cancha
+    function calcularValor() {
+      const duracao = parseFloat(document.getElementById('duracao').value);
+      if (!duracao || duracao <= 0) {
+        document.getElementById('valorTotal').value = '';
+        return;
+      }
+
+      const precoHora = preciosPorHora[campoSeleccionado] || 0;
+      const total = precoHora * duracao;
+      document.getElementById('valorTotal').value = total.toFixed(2) + ' Bs';
+    }
+
+    // Função para enviar a reserva
+function enviarReserva() {
+  const data = document.getElementById('data').value;
+  const hora = document.getElementById('hora').value;
+  const duracao = document.getElementById('duracao').value;
+  const cliente = document.getElementById('cliente').value;
+  const valor = document.getElementById('valorTotal').value;
+  const whatsapp = document.getElementById('whatsapp').value;
+  const email = document.getElementById('email').value;
+
+  if (!data || !hora || !duracao || !cliente || !valor || !whatsapp || !email) {
+    alert('¡Rellena todos los campos!');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('cancha', campoSeleccionado);
+  formData.append('data', data);
+  formData.append('hora', hora);
+  formData.append('duracao', duracao);
+  formData.append('cliente', cliente);
+  formData.append('valor', valor);
+  formData.append('whatsapp', whatsapp);
+  formData.append('email', email);
+
+  fetch('reservas-pentagol.infinityfreeapp.com/reserva.php', {
+    method: 'POST',
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Erro na resposta do servidor');
+      }
+      return response.text();
+    })
+    .then((resultado) => {
+      alert('✅ ' + resultado);
+
+      // Enviar mensagem no WhatsApp do cliente
+     // const mensaje = `Reserva de Cancha: ${campoSeleccionado}\nFecha: ${data}\nHora: ${hora}\nDuración: ${duracao} horas\nCliente: ${cliente}\nValor Total: ${valor}\n\n¡Gracias por tu reserva!`;
+      //const urlWhatsApp = `https://wa.me/${whatsapp}?text=${encodeURIComponent(mensaje)}`;
+      //window.open(urlWhatsApp, '_blank');
+
+      fecharFormulario();
+    })
+    .catch((error) => {
+      alert('❌ Erro ao registrar reserva.');
+      console.error('Erro no fetch:', error);
+    });
+}
+    // Pode adicionar marcadores, etc. aqui, se
+
+  </script>
+  </body>
+</html>
