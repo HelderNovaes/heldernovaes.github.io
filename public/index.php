@@ -383,7 +383,7 @@ function enviarReserva() {
   formData.append('whatsapp', whatsapp);
   formData.append('email', email);
 
-  fetch('https://heldernovaes-github-io.onrender.com/reserva.php', {
+  fetch('/reserva.php', {
     method: 'POST',
     body: formData,
   })
