@@ -4,10 +4,10 @@ $usuario = "if0_39089337";
 $senha = "HSNS2017";
 $banco = "if0_39089337_pentagol";
 
-$servidor = "localhost";
-$usuario = "root";
-$senha = "";
-$banco = "pentagol";
+//$servidor = "localhost";
+//$usuario = "root";
+//$senha = "";
+//$banco = "pentagol";
 $conexao = new mysqli($servidor, $usuario, $senha, $banco);
 
 if ($conexao->connect_error) {
