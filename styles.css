@@ -1,0 +1,356 @@
+ * {
+            box-sizing: border-box;
+        }
+html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Roboto', sans-serif;
+      background-image: url('img/bodys.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    header {
+      background-color: #009688;
+      color: rgb(255, 255, 255);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    header img {
+      height: 80px;
+      border-radius: 50%;
+      margin-right: 20px;
+    }
+
+    .campos {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      flex-wrap: wrap;
+    }
+
+    .campo {
+      background: rgba(8, 155, 223, 0.85);
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .campo:hover {
+      transform: scale(1.05);
+    }
+
+    .campo img {
+      width: 150px;
+      border-radius: 8px;
+    }
+
+    #formulario {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      z-index: 1001;
+      width: 300px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+
+    #formulario input, #formulario select {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+    }
+
+    .btn-confirmar, .btn-cancelar {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+    }
+
+    .btn-confirmar {
+      background-color: #4CAF50;
+    }
+
+    .btn-cancelar {
+      background-color: #f44336;
+    }
+
+    footer {
+      background-color: #222;
+      color: #eee;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .redes-sociales {
+      margin-top: 10px;
+    }
+
+    .redes-sociales a {
+      margin: 0 10px;
+    }
+
+    .redes-sociales img {
+      width: 28px;
+      filter: brightness(0) invert(1);
+      transition: transform 0.3s;
+    }
+
+    .redes-sociales img:hover {
+      transform: scale(1.2);
+    }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url('img/bodys.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            
+        }
+
+        header {
+            background-color: #11ac92;
+            padding: 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        header img {
+            height: 100px;
+            width: 100px;
+            border-radius: 50%;
+            padding: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        header div {
+            text-align: left;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        header p {
+            margin: 4px 0 0;
+            font-size: 18px;
+            color: #c8e6c9;
+        }
+
+        #mapid {
+            height: 300px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            width: 90%; /* Ajusta el ancho según necesites */
+            max-width: 1100px; /* Para que no se extienda demasiado en pantallas grandes */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .campos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin: 40px auto;
+            max-width: 1100px;
+        }
+
+        .campo img {
+            width: 170px;
+            height: 110px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .campo img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+        .campo h3 {
+            color: #fafafa; /* Altere esa color según sea necesario */
+            font-size: 18px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            z-index: 1;
+        }
+
+        #formulario {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        #formulario h2 {
+            color: #00796b;
+            margin-top: 0;
+        }
+
+        input, select {
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        button {
+            padding: 10px 18px;
+            margin: 8px 5px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-confirmar {
+            background-color: #43a047;
+            color: white;
+        }
+
+        .btn-cancelar {
+            background-color: #9e9e9e;
+            color: white;
+        }
+        
+footer {
+  background-color: #0e84c9;
+  color: #09c512;
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  font-size: 14px;
+}
+
+footer .redes-sociales {
+  margin-top: 10px;
+}
+
+footer .redes-sociales a {
+  margin: 0 10px;
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+footer .redes-sociales img {
+  width: 28px;
+  height: 28px;
+  filter: brightness(0) invert(1); /* Para que fique branco sobre fundo escuro */
+}
+
+footer .redes-sociales a:hover {
+  transform: scale(1.2);
+}
+    
+        button:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .campos {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .campo img {
+                width: 90%;
+                height: auto;
+            }
+
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            header div {
+                text-align: center;
+            }
+        }
+        @media (max-width: 480px) {
+    header h1 {
+        font-size: 24px;
+    }
+
+    header p {
+        font-size: 14px;
+    }
+
+    #formulario {
+        padding: 15px;
+    }
+
+    input, select {
+        font-size: 14px;
+    }
+
+    button {
+        font-size: 14px;
+    }
+
+    .campo h3 {
+        font-size: 16px;
+    }
+}
