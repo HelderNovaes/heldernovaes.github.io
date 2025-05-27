@@ -1,5 +1,5 @@
 <?php
-$servidor = "pentagolreservas.infinityfreeapp.com";
+$servidor = "sql110.infinityfree.com";
 $usuario = "if0_39089337";
 $senha = "HSNS2017";
 $banco = "if0_39089337_pentagol";
