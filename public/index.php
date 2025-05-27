@@ -1,3 +1,15 @@
+<?php
+// Você pode incluir conexões ou sessões aqui, se necessário
+// include 'config.php';
+// session_start();
+
+include 'conexao.php'; // ou config.php, db.php, etc.
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -293,8 +305,9 @@
   </footer>
 
   <!-- Leaflet JS -->
- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+
 
 
   <script>
@@ -370,7 +383,7 @@ function enviarReserva() {
   formData.append('whatsapp', whatsapp);
   formData.append('email', email);
 
-  fetch('reservas-pentagol.infinityfreeapp.com/reserva.php', {
+  fetch('https://heldernovaes-github-io.onrender.com/reserva.php', {
     method: 'POST',
     body: formData,
   })
