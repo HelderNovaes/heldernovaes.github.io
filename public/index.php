@@ -1,15 +1,3 @@
-<?php
-// Você pode incluir conexões ou sessões aqui, se necessário
-// include 'config.php';
-// session_start();
-
-include 'conexao.php'; // ou config.php, db.php, etc.
-
-?>
-
-
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -383,7 +371,7 @@ function enviarReserva() {
   formData.append('whatsapp', whatsapp);
   formData.append('email', email);
 
-  fetch('https://heldernovaes-github-io.onrender.com/reserva.php', {
+  fetch('reservas-pentagol.infinityfreeapp.com/reserva.php', {
     method: 'POST',
     body: formData,
   })

@@ -293,9 +293,11 @@
   </footer>
 
   <!-- Leaflet JS -->
- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-pkQ8w3LmX+G7XWz+rgzjkwXQ5HzcIj3BS3Zfj9DqkEY="
+    crossorigin=""
+  ></script>
 
   <script>
     // Variável global para a cancha selecionada
@@ -346,55 +348,61 @@ function abrirFormulario(campo) {
     }
 
     // Função para enviar a reserva
-function enviarReserva() {
-  const data = document.getElementById('data').value;
-  const hora = document.getElementById('hora').value;
-  const duracao = document.getElementById('duracao').value;
-  const cliente = document.getElementById('cliente').value;
-  const valor = document.getElementById('valorTotal').value;
-  const whatsapp = document.getElementById('whatsapp').value;
-  const email = document.getElementById('email').value;
+      function enviarReserva() {
+        const data = document.getElementById('data').value;
+        const hora = document.getElementById('hora').value;
+        const duracao = document.getElementById('duracao').value;
+        const cliente = document.getElementById('cliente').value;
+        const valor = document.getElementById('valorTotal').value;
 
-  if (!data || !hora || !duracao || !cliente || !valor || !whatsapp || !email) {
-    alert('¡Rellena todos los campos!');
-    return;
-  }
+        if (!data || !hora || !duracao || !cliente || !valor) {
+          alert('¡Rellena todos los campos!');
+          return;
+        }
 
-  const formData = new FormData();
-  formData.append('cancha', campoSeleccionado);
-  formData.append('data', data);
-  formData.append('hora', hora);
-  formData.append('duracao', duracao);
-  formData.append('cliente', cliente);
-  formData.append('valor', valor);
-  formData.append('whatsapp', whatsapp);
-  formData.append('email', email);
+        // Criar FormData para envio
+        const formData = new FormData();
+        formData.append('cancha', campoSeleccionado);
+        formData.append('data', data);
+        formData.append('hora', hora);
+        formData.append('duracao', duracao);
+        formData.append('cliente', cliente);
+        formData.append('valor', valor);
 
-  fetch('https://heldernovaes-github-io.onrender.com/reserva.php', {
-    method: 'POST',
-    body: formData,
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Erro na resposta do servidor');
-      }
-      return response.text();
-    })
-    .then((resultado) => {
-      alert('✅ ' + resultado);
+      fetch('reserva.php', {
+        method: 'POST',
+        body: formData,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Erro na resposta do servidor');
+          }
+          return response.text();
+        })
+        .then((resultado) => {
+          alert('✅ ' + resultado);
 
-      // Enviar mensagem no WhatsApp do cliente
-     // const mensaje = `Reserva de Cancha: ${campoSeleccionado}\nFecha: ${data}\nHora: ${hora}\nDuración: ${duracao} horas\nCliente: ${cliente}\nValor Total: ${valor}\n\n¡Gracias por tu reserva!`;
-      //const urlWhatsApp = `https://wa.me/${whatsapp}?text=${encodeURIComponent(mensaje)}`;
-      //window.open(urlWhatsApp, '_blank');
+          // Enviar mensagem no WhatsApp
+          const numeroWhatsApp = '59167728519';
+          const mensaje = `Reserva de Cancha: ${campoSeleccionado}\nFecha: ${data}\nHora: ${hora}\nDuración: ${duracao} horas\nCliente: ${cliente}\nValor Total: ${valor}\n\n¡Gracias por tu reserva!`;
+          const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+          window.open(urlWhatsApp, '_blank');
 
-      fecharFormulario();
-    })
-    .catch((error) => {
-      alert('❌ Erro ao registrar reserva.');
-      console.error('Erro no fetch:', error);
-    });
-}
+          fecharFormulario();
+        })
+        .catch((error) => {
+          alert('❌ Erro ao registrar reserva.');
+          console.error('Erro no fetch:', error);
+        });
+    }
+
+    // Iniciar mapa Leaflet (exemplo simples)
+    const map = L.map('mapid').setView([-17.7833, -63.1821], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap',
+    }).addTo(map);
+
     // Pode adicionar marcadores, etc. aqui, se
 
   </script>
