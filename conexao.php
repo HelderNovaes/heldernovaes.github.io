@@ -1,8 +1,8 @@
 <?php
-$servidor = "pentagol.infinityfreeapp.com";
-$usuario = "if0_39095857";
+$servidor = "pentagolreservas.infinityfreeapp.com";
+$usuario = "if0_39089337";
 $senha = "HSNS2017";
-$banco = "if0_39095857_pentagol";
+$banco = "if0_39089337_pentagol";
 
 $servidor = "localhost";
 $usuario = "root";
