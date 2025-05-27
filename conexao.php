@@ -1,8 +1,8 @@
 <?php
-$servidor = "localhost";
-$usuario = "root";
-$senha = "";
-$banco = "pentagol";
+$servidor = "pentagol.infinityfreeapp.com";
+$usuario = "if0_39095857";
+$senha = "HSNS2017";
+$banco = "if0_39095857_pentagol";
 
 $conexao = new mysqli($servidor, $usuario, $senha, $banco);
 
