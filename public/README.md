@@ -1,2 +1,0 @@
-# reservasfutbol
-reservas para futbol
