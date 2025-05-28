@@ -44,6 +44,17 @@ if (isset($_GET['busca']) && trim($_GET['busca']) !== '') {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Admin - Reservas</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<!-- DatePicker (opcional para mejor filtro de fechas) -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/i18n/jquery-ui-i18n.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <style>
         * {
             box-sizing: border-box;
@@ -207,6 +218,66 @@ button[type="submit"]:active {
             font-weight: bold;
         }
 
+/* Estilo base para os filtros */
+#filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
+
+#filtros label {
+    font-weight: bold;
+    color: #333;
+    font-size: 14px;
+}
+
+#filtros input[type="text"] {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 200px;
+    box-sizing: border-box;
+}
+
+#filtros input[type="text"]:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.3);
+}
+#DataTables_Table_0_filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+#DataTables_Table_0_filter label {
+    font-weight: bold;
+    color: #333;
+}
+
+#DataTables_Table_0_filter input {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 200px;
+    transition: border-color 0.3s ease;
+}
+
+#DataTables_Table_0_filter input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.3);
+}
+
+
         td a:hover {
             text-decoration: underline;
         }
@@ -215,52 +286,114 @@ button[type="submit"]:active {
             color: #e74c3c;
             cursor: pointer;
         }
+/* Corrige el layout do datepicker */
+.ui-datepicker table {
+    display: table !important;
+    width: 100%;
+    border-collapse: collapse;
+}
 
-        @media (max-width: 900px) {
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
+.ui-datepicker th,
+.ui-datepicker td {
+    display: table-cell !important;
+    text-align: center;
+    padding: 5px;
+}
 
-            thead tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
+.ui-datepicker td span,
+.ui-datepicker td a {
+    display: block;
+    text-decoration: none;
+    padding: 4px;
+    color: #333;
+}
 
-            tr {
-                margin-bottom: 20px;
-                border: 1px solid #ccc;
-                border-radius: 8px;
-                padding: 10px;
-                background: white;
-            }
+.ui-datepicker {
+    z-index: 9999 !important;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-            td {
-                border: none;
-                border-bottom: 1px solid #eee;
-                position: relative;
-                padding-left: 50%;
-                text-align: right;
-                font-size: 14px;
-            }
+@media (max-width: 900px) {
 
-            td:last-child {
-                border-bottom: 0;
-            }
+    /* 🔄 Tabela responsiva estilo cartão */
+    table.responsiva,
+    table.responsiva thead,
+    table.responsiva tbody,
+    table.responsiva tr,
+    table.responsiva td,
+    table.responsiva th {
+        display: block;
+    }
 
-            td::before {
-                position: absolute;
-                top: 12px;
-                left: 15px;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                font-weight: bold;
-                text-align: left;
-                color: #34495e;
-                content: attr(data-label);
-            }
-        }
+    table.responsiva thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    table.responsiva tr {
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 10px;
+        background: white;
+    }
+
+    table.responsiva td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+        font-size: 14px;
+    }
+
+    table.responsiva td:last-child {
+        border-bottom: 0;
+    }
+
+    table.responsiva td::before {
+        position: absolute;
+        top: 12px;
+        left: 15px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+        text-align: left;
+        color: #34495e;
+        content: attr(data-label);
+    }
+
+    /* ❌ Exceção: Coluna "Fecha" deve manter estilo normal */
+    table.responsiva td[data-label="Fecha"] {
+        padding-left: 10px !important;
+        text-align: left !important;
+    }
+
+    table.responsiva td[data-label="Fecha"]::before {
+        content: none !important;
+    }
+
+    /* 🔄 Filtros empilhados */
+    #filtros {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    #filtros label,
+    #filtros input[type="text"] {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
     </style>
     <script>
         function removerReserva(id) {
@@ -280,13 +413,24 @@ button[type="submit"]:active {
     <button type="submit">Buscar</button>
 </form>
 
+
+
+
         <div>
             <a href="index.html" class="new-reserva">Nova Reserva</a>
             <a href="logout.php" class="logout">Sair</a>
         </div>
     </div>
 
-    <table>
+   <div id="filtros">
+    <label for="fechaFiltro">Filtrar por Fecha:</label>
+    <input type="text" id="fechaFiltro" placeholder="YYYY-MM-DD">
+
+    <label for="horaFiltro">Filtrar por Hora:</label>
+    <input type="text" id="horaFiltro" placeholder="HH:MM">
+</div>
+
+    <table class="responsiva" id="tabelaPrincipal">
         <thead>
             <tr>
                 <th>ID</th>
@@ -326,6 +470,24 @@ button[type="submit"]:active {
             <?php endwhile; ?>
         </tbody>
     </table>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/i18n/jquery-ui-i18n.min.js"></script>
+<script>
+  $(function() {
+    // Detecta o idioma do navegador
+    var userLang = navigator.language || navigator.userLanguage; // pt-BR, es, en, etc.
+    userLang = userLang.toLowerCase();
+
+    // Aplica regional se existir, senão usa espanhol como padrão
+    $.datepicker.setDefaults($.datepicker.regional[userLang] || $.datepicker.regional["es"]);
+
+    $("#fechaFiltro").datepicker({
+      dateFormat: "yy-mm-dd"
+    });
+  });
+</script>
+
+
 <script>
 function removerReserva(id) {
     if (!confirm("Tem certeza que deseja remover esta reserva?")) {
@@ -360,6 +522,59 @@ function removerReserva(id) {
         alert("Erro ao tentar remover a reserva.");
     });
 }
+$(document).ready(function() {
+    // Detectar el idioma del navegador
+    var userLang = (navigator.language || navigator.userLanguage).toLowerCase(); // ej: 'es', 'pt-br'
+    
+    // Mapeo de idiomas soportados por DataTables
+    var dataTablesLangMap = {
+        'es': 'es-ES',
+        'pt': 'pt-BR',
+        'en': 'en-GB',
+        'fr': 'fr-FR',
+        // agrega más si quieres
+    };
+
+    // Normalizar idioma base
+    var baseLang = userLang.split('-')[0]; // ej: 'es' de 'es-AR'
+
+    // Usar idioma detectado o default (español)
+    var dataTablesLang = dataTablesLangMap[baseLang] || 'es-ES';
+
+    // Inicializar DataTables con idioma detectado
+    var table = $('table').DataTable({
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/" + dataTablesLang + ".json"
+        }
+    });
+
+    // Inicializar Datepicker con idioma detectado
+    $.datepicker.setDefaults($.datepicker.regional[userLang] || $.datepicker.regional[baseLang] || $.datepicker.regional["es"]);
+
+    // Datepicker personalizado que aparece un poco más abajo
+   $("#fechaFiltro").datepicker({
+    dateFormat: "yy-mm-dd",
+    beforeShow: function(input, inst) {
+        setTimeout(function() {
+            inst.dpDiv.css({
+                top: $(input).offset().top -150, // Aparece un poco más arriba del input
+                left: $(input).offset().left + $(input).outerWidth() + 10 // Aparece al lado derecho del input
+            });
+        }, 0);
+    }
+});
+
+    // Filtro por fecha
+    $('#fechaFiltro').on('keyup change', function () {
+        table.column(2).search(this.value).draw();
+    });
+
+    // Filtro por hora
+    $('#horaFiltro').on('keyup change', function () {
+        table.column(3).search(this.value).draw();
+    });
+});
+
 </script>
 
 

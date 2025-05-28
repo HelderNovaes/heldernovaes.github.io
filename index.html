@@ -202,30 +202,28 @@ function abrirFormulario(campo) {
       const total = precoHora * duracao;
       document.getElementById('valorTotal').value = total.toFixed(2) + ' Bs';
     }
+
     // Função para enviar a reserva
-    function enviarReserva() {
-    const data = document.getElementById('data').value;
-    const hora = document.getElementById('hora').value;
-    const duracao = document.getElementById('duracao').value;
-    const cliente = document.getElementById('cliente').value;
-    const valor = document.getElementById('valorTotal').value;
-    const whatsapp = document.getElementById('whatsapp').value;   // Campo WhatsApp
-    const email = document.getElementById('email').value;         // Campo Email
+      function enviarReserva() {
+        const data = document.getElementById('data').value;
+        const hora = document.getElementById('hora').value;
+        const duracao = document.getElementById('duracao').value;
+        const cliente = document.getElementById('cliente').value;
+        const valor = document.getElementById('valorTotal').value;
 
-    if (!data || !hora || !duracao || !cliente || !valor || !whatsapp || !email) {
-        alert('¡Rellena todos los campos!');
-        return;
-    }
+        if (!data || !hora || !duracao || !cliente || !valor) {
+          alert('¡Rellena todos los campos!');
+          return;
+        }
 
-    const formData = new FormData();
-    formData.append('cancha', campoSeleccionado);  // campoSeleccionado deve estar declarado globalmente
-    formData.append('data', data);
-    formData.append('hora', hora);
-    formData.append('duracao', duracao);
-    formData.append('cliente', cliente);
-    formData.append('valor', valor);
-    formData.append('whatsapp', whatsapp);
-    formData.append('email', email);
+        // Criar FormData para envio
+        const formData = new FormData();
+        formData.append('cancha', campoSeleccionado);
+        formData.append('data', data);
+        formData.append('hora', hora);
+        formData.append('duracao', duracao);
+        formData.append('cliente', cliente);
+        formData.append('valor', valor);
 
       fetch('reserva.php', {
         method: 'POST',
