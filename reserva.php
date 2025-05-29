@@ -8,9 +8,8 @@ $hora = $conexao->real_escape_string(trim($_POST['hora']));
 $duracao = (int)$_POST['duracao'];
 $cliente = $conexao->real_escape_string(trim($_POST['cliente']));
 $valor = (float)$_POST['valor'];
-$whatsapp = trim($_POST['whatsapp'] ?? '');
-$email = trim($_POST['email'] ?? '');
-
+$whatsapp = isset($_POST['whatsapp']) ? $conexao->real_escape_string(trim($_POST['whatsapp'])) : '';
+$email = isset($_POST['email']) ? $conexao->real_escape_string(trim($_POST['email'])) : '';
 // Convertemos para timestamp para comparar
 $dataReserva = $data;
 $inicioNova = strtotime("$data $hora");
