@@ -212,7 +212,7 @@ function abrirFormulario(campo) {
         const valor = document.getElementById('valorTotal').value;
         const whatsapp = document.getElementById('whatsapp').value;
         const email = document.getElementById('email').value;
-        if (!data || !hora || !duracao || !cliente || !valor) {
+        if (!data || !hora || !duracao || !cliente || !valor || !whatsapp || !email) {
           alert('¡Rellena todos los campos!');
           return;
         }
@@ -225,7 +225,8 @@ function abrirFormulario(campo) {
         formData.append('duracao', duracao);
         formData.append('cliente', cliente);
         formData.append('valor', valor);
-
+        formData.append('whatsapp', whatsapp);
+        formData.append('email', email);
       fetch('reserva.php', {
         method: 'POST',
         body: formData,
