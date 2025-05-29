@@ -161,10 +161,10 @@
 
     // Preço por hora para cada cancha
     const preciosPorHora = {
-      'Cancha 1': 150,
+      'Cancha 1': 170,
       'Cancha 2': 150,
-      'Cancha 3': 170,
-      'Cancha 4': 170,
+      'Cancha 3': 100,
+      'Cancha 4': 100,
     };
 
     // Função para abrir o formulário e definir título e cancha selecionada
@@ -210,7 +210,8 @@ function abrirFormulario(campo) {
         const duracao = document.getElementById('duracao').value;
         const cliente = document.getElementById('cliente').value;
         const valor = document.getElementById('valorTotal').value;
-
+        const whatsapp = document.getElementById('whatsapp').value;
+        const email = document.getElementById('email').value;
         if (!data || !hora || !duracao || !cliente || !valor) {
           alert('¡Rellena todos los campos!');
           return;
