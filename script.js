@@ -39,32 +39,4 @@ formData.append("email", email);
     }
     return response.text();
 })
-.then(resultado => {
-    if (resultado === "disponivel") {
-        alert("✅ Reserva confirmada!");
-
-        const numeroWhatsApp = "59167728519";
-        const mensaje = 
-`📅 *Reserva de Cancha: ${campoSeleccionado}*
-🗓️ Fecha: ${data}
-🕒 Hora: ${hora}
-⏳ Duración: ${duracion} horas
-👤 Cliente: ${cliente}
-💵 Valor Total: ${valor} Bs
-📱 WhatsApp: ${whatsapp}
-📧 Email: ${email}
-
-¡Gracias por tu reserva! 🙌`;
-
-        const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
-        window.open(urlWhatsApp, "_blank");
-    } else {
-        alert("⚠️ Lo sentimos, el horario seleccionado no está disponible. Intenta otro.");
-        // No limpar os dados, o formulário permanece intacto
-    }
-})
-.catch(error => {
-    console.error("❌ Error al verificar disponibilidad:", error);
-    alert("❌ Ocurrió un error al verificar la disponibilidad.");
-});
 }

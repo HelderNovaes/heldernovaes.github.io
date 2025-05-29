@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Horários Disponíveis</title>
+  <link rel="stylesheet" href="disponivel.css">
+  <style>
+    body { font-family: sans-serif; padding: 20px;
+      background: #00eeff; }
+    .horarios { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
+    .horario { padding: 10px 15px; background: #4caf50; color: white; border-radius: 6px; cursor: pointer; }
+    .horario.ocupado { background: #ccc; cursor: not-allowed; text-decoration: line-through; }
+    
+  </style>
+</head>
+<body>
+  <h2>Ver Horários Disponíveis</h2>
+  <label>Cancha:
+   <select id="cancha" name="cancha" required>
+      <option value="Cancha 1">Cancha 1</option>
+      <option value="Cancha 2">Cancha 2</option>
+      <option value="Cancha 3">Cancha 3</option>
+      <option value="Cancha 4">Cancha 4</option>
+    </select>
+  </label>
+  <label>Data:
+    <input type="date" id="data" />
+  </label>
+  <button onclick="carregarHorarios()">Verificar</button>
+  <h2 id="tituloHorarios">Horários disponíveis</h2>
+<div id="horariosContainer"></div>
+  <div class="horarios" id="listaHorarios"></div>
+
+  <script src="disponivel.js"></script>
+</body>
+</html>

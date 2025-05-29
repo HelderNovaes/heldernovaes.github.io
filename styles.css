@@ -12,6 +12,20 @@ html, body {
       background-size: cover;
       background-position: center;
     }
+.btn-disponivel {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-disponivel:hover {
+  background-color: #388e3c;
+}
 
     main {
       flex: 1;

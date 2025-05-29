@@ -1,0 +1,93 @@
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f6f8;
+      padding: 40px 20px;
+      color: #333;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    label {
+      display: inline-block;
+      margin: 10px 15px 10px 0;
+      font-weight: 500;
+    }
+
+    select, input[type="date"] {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      margin-left: 5px;
+      background-color: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      transition: border-color 0.3s;
+    }
+
+    select:focus, input[type="date"]:focus {
+      border-color: #4caf50;
+      outline: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #43a047;
+    }
+
+    .horarios {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 30px;
+      justify-content: center;
+    }
+
+  .horario {
+  padding: 8px;
+  margin: 4px;
+  border-radius: 4px;
+  display: inline-block;
+  width: 70px;
+  text-align: center;
+  user-select: none;
+}
+
+.horario.ocupado {
+  background-color: #f44336; /* vermelho */
+  color: white;
+  cursor: not-allowed;
+}
+
+.horario.livre {
+  background-color: #4caf50; /* verde */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.horario.livre:hover {
+  background-color: #45a049;
+}
+
+    .horario:hover {
+      transform: scale(1.05);
+      background-color: #45a049;
+    }
+
+    

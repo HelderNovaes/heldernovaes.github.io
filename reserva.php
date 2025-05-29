@@ -1,26 +1,32 @@
 <?php
 include 'conexao.php';
 
-// Captura e valida dados do POST
-$cancha = $conexao->real_escape_string(trim($_POST['cancha']));
-$data = $conexao->real_escape_string(trim($_POST['data']));
-$hora = $conexao->real_escape_string(trim($_POST['hora']));
-$duracao = (int)$_POST['duracao'];
-$cliente = $conexao->real_escape_string(trim($_POST['cliente']));
-$valor = (float)$_POST['valor'];
+// Captura e validação de dados
+$cancha   = isset($_POST['cancha']) ? $conexao->real_escape_string(trim($_POST['cancha'])) : '';
+$data     = isset($_POST['data']) ? $conexao->real_escape_string(trim($_POST['data'])) : '';
+$hora     = isset($_POST['hora']) ? $conexao->real_escape_string(trim($_POST['hora'])) : '';
+$duracao  = isset($_POST['duracao']) ? (int) $_POST['duracao'] : 0;
+$cliente  = isset($_POST['cliente']) ? $conexao->real_escape_string(trim($_POST['cliente'])) : '';
+$valor    = isset($_POST['valor']) ? (float) $_POST['valor'] : 0;
 $whatsapp = isset($_POST['whatsapp']) ? $conexao->real_escape_string(trim($_POST['whatsapp'])) : '';
-$email = isset($_POST['email']) ? $conexao->real_escape_string(trim($_POST['email'])) : '';
-// Convertemos para timestamp para comparar
+$email    = isset($_POST['email']) ? $conexao->real_escape_string(trim($_POST['email'])) : '';
+
+// Validar se campos obrigatórios foram preenchidos
+if (!$cancha || !$data || !$hora || !$duracao || !$cliente || !$valor || !$whatsapp || !$email) {
+    echo json_encode([
+        'status' => 'erro',
+        'mensagem' => '❌ Preencha todos os campos obrigatórios.',
+        'disponivel' => false
+    ]);
+    exit;
+}
+
+// Verificar conflitos de horário
 $dataReserva = $data;
 $inicioNova = strtotime("$data $hora");
 $fimNova = strtotime("+$duracao hour", $inicioNova);
 
-// Buscar reservas existentes na mesma data e cancha
-$stmt = $conexao->prepare("
-    SELECT hora, duracion 
-    FROM reservas 
-    WHERE cancha = ? AND fecha = ?
-");
+$stmt = $conexao->prepare("SELECT hora, duracion FROM reservas WHERE cancha = ? AND fecha = ?");
 $stmt->bind_param("ss", $cancha, $dataReserva);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -29,53 +35,62 @@ $conflito = false;
 
 while ($row = $result->fetch_assoc()) {
     $inicioExistente = strtotime("$dataReserva " . $row['hora']);
-    $fimExistente = strtotime("+" . $row['duracion'] . " hour", $inicioExistente);
+    $fimExistente = strtotime("+{$row['duracion']} hour", $inicioExistente);
 
-    // Verificar se há sobreposição
-    if (
-        ($inicioNova < $fimExistente) && ($fimNova > $inicioExistente)
-    ) {
+    if (($inicioNova < $fimExistente) && ($fimNova > $inicioExistente)) {
         $conflito = true;
         break;
     }
 }
 
 if ($conflito) {
-   echo "Horário indisponível! Já existe uma reserva neste horário. Por favor, escolha outro horário.";
-exit;
-
+    echo json_encode([
+        'status' => 'erro',
+        'mensagem' => '❌ Horário indisponível! Já existe uma reserva neste horário.',
+        'disponivel' => false
+    ]);
+    exit;
 }
 
-
+// Inserir reserva
 $stmt = $conexao->prepare("INSERT INTO reservas (cancha, fecha, hora, duracion, cliente, valor_total, whatsapp, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 if (!$stmt) {
-    die("Erro no prepare: " . $conexao->error);
+    echo json_encode([
+        'status' => 'erro',
+        'mensagem' => '❌ Erro ao preparar a inserção: ' . $conexao->error,
+        'disponivel' => false
+    ]);
+    exit;
 }
 
 $stmt->bind_param("sssisdss", $cancha, $data, $hora, $duracao, $cliente, $valor, $whatsapp, $email);
 
 if ($stmt->execute()) {
-    // Enviar e-mail
-    $assunto = "Confirmação de Reserva - Pentagol";
-    $mensagem = "Olá $cliente,\n\nSua reserva foi registrada com sucesso:\n\n".
-                "📅 Data: $data\n⏰ Hora: $hora\n🕒 Duração: $duracao hora(s)\n".
-                "💰 Valor: $valor Bs\n\nObrigado por reservar com a Pentagol!";
-    $cabecalhos = "From: helderpes@gmail.com";
-
+    // E-mail
     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        mail($email, $assunto, $mensagem, $cabecalhos);
+        $assunto = "Confirmação de Reserva - Pentagol";
+        $mensagem = "Olá $cliente,\n\nSua reserva foi registrada com sucesso!";
+        $cabecalhos = "From: helderpes@gmail.com";
+        @mail($email, $assunto, $mensagem, $cabecalhos);
     }
 
-    // Enviar WhatsApp
+    // Link do WhatsApp
     $numeroLimpo = preg_replace('/\D/', '', $whatsapp);
     $mensagemWpp = urlencode("Olá $cliente! Sua reserva na *Pentagol* foi registrada com sucesso:\n\n📅 Data: $data\n⏰ Hora: $hora\n🕒 Duração: $duracao hora(s)\n💰 Valor: $valor Bs\n\nObrigado por escolher a Pentagol!");
-    $link = "https://wa.me/$numeroLimpo?text=$mensagemWpp";
+    $linkWpp = "https://wa.me/$numeroLimpo?text=$mensagemWpp";
 
-    echo "Reserva registrada com sucesso! Vamos te redirecionar ao WhatsApp...";
-    exit;
-
+   echo json_encode([
+    'status' => 'sucesso',
+    'mensagem' => '✅ Reserva registrada com sucesso',
+    'disponivel' => true,
+    'whatsapplink' => $linkWpp
+]);
 } else {
-    echo "Erro ao registrar: " . $stmt->error;
+    echo json_encode([
+        'status' => 'erro',
+        'mensagem' => '❌ Erro ao registrar a reserva: ' . $stmt->error,
+        'disponivel' => false
+    ]);
 }
 
 $stmt->close();

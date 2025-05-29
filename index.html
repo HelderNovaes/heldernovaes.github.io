@@ -22,15 +22,18 @@
       <h1>Pentagol</h1>
       <p>Reserva tu cancha en línea, fácil y rápido</p>
     </div>
-  </header>
+ 
 
+  </header>
+   <a href="disponivel.html" target="_blank" class="btn-disponivel">Ver Horários Disponíveis</a>
+  
   <main>
-    <div class="campos">
-      <div class="campo" onclick="abrirFormulario('Cancha 1')">
+    <div class="campos" id="cancha">
+      <div class="campo" id="Cancha1" onclick="abrirFormulario('Cancha 1')">
         <img src="img/campo1.png" alt="Campo 1" />
         <h3>Cancha de 7 jugadores <br> (Cancha 1)</h3>
       </div>
-      <div class="campo" onclick="abrirFormulario('Cancha 2')">
+      <div class="campo" id="cancha2" onclick="abrirFormulario('Cancha 2')">
         <img src="img/campo1.png" alt="Campo 2" />
         <h3>Cancha de 6 jugadores <br> (Cancha 2)</h3>
       </div>
@@ -46,93 +49,94 @@
 
     <div id="overlay" onclick="fecharFormulario()"></div>
 
-<form id="formulario" method="POST" action="#" onsubmit="return false;">
-  <h2 id="tituloCampo">Reserva</h2>
+  <form id="formulario" method="POST" action="#" onsubmit="return false;">
+    <h2 id="tituloCampo">Reserva</h2>
 
   <input type="date" id="data" name="data" required />
 
   <select id="hora" name="hora" required>
-    <option value="">Selecciona una hora</option>
-    <!-- Horarios aquí -->
-     <option value="06:00">06:00</option>
-        <option value="06:30">06:30</option>
-        <option value="07:00">07:00</option>
-        <option value="07:30">07:30</option>
-        <option value="08:00">08:00</option>
-        <option value="08:30">08:30</option>
-        <option value="09:00">09:00</option>
-        <option value="09:30">09:30</option>
-        <option value="10:00">10:00</option>
-        <option value="10:30">10:30</option>
-        <option value="11:00">11:00</option>
-        <option value="11:30">11:30</option>
-        <option value="12:00">12:00</option>
-        <option value="12:30">12:30</option>
-        <option value="13:00">13:00</option>
-        <option value="13:30">13:30</option>
-        <option value="14:00">14:00</option>
-        <option value="14:30">14:30</option>
-        <option value="15:00">15:00</option>
-        <option value="15:30">15:30</option>
-        <option value="16:00">16:00</option>
-        <option value="16:30">16:30</option>
-        <option value="17:00">17:00</option>
-        <option value="17:30">17:30</option>
-        <option value="18:00">18:00</option>
-        <option value="18:30">18:30</option>
-        <option value="19:00">19:00</option>
-        <option value="19:30">19:30</option>
-        <option value="20:00">20:00</option>
-        <option value="20:30">20:30</option>
-        <option value="21:00">21:00</option>
-        <option value="21:30">21:30</option>
-        <option value="22:00">22:00</option>
-        <option value="22:30">22:30</option>
-        <option value="23:00">23:00</option>
-        <option value="23:30">23:30</option>
-        <option value="00:00">00:00</option>
-  </select>
 
-  <input
-    type="number"
-    id="duracao"
-    name="duracao"
-    placeholder="Duración en horas"
-    min="1"
-    max="10"
-    oninput="calcularValor()"
-    required
-  />
+      <option value="">Selecciona una hora</option>
+      <!-- Horarios aquí -->
+      <option value="06:00">06:00</option>
+          <option value="06:30">06:30</option>
+          <option value="07:00">07:00</option>
+          <option value="07:30">07:30</option>
+          <option value="08:00">08:00</option>
+          <option value="08:30">08:30</option>
+          <option value="09:00">09:00</option>
+          <option value="09:30">09:30</option>
+          <option value="10:00">10:00</option>
+          <option value="10:30">10:30</option>
+          <option value="11:00">11:00</option>
+          <option value="11:30">11:30</option>
+          <option value="12:00">12:00</option>
+          <option value="12:30">12:30</option>
+          <option value="13:00">13:00</option>
+          <option value="13:30">13:30</option>
+          <option value="14:00">14:00</option>
+          <option value="14:30">14:30</option>
+          <option value="15:00">15:00</option>
+          <option value="15:30">15:30</option>
+          <option value="16:00">16:00</option>
+          <option value="16:30">16:30</option>
+          <option value="17:00">17:00</option>
+          <option value="17:30">17:30</option>
+          <option value="18:00">18:00</option>
+          <option value="18:30">18:30</option>
+          <option value="19:00">19:00</option>
+          <option value="19:30">19:30</option>
+          <option value="20:00">20:00</option>
+          <option value="20:30">20:30</option>
+          <option value="21:00">21:00</option>
+          <option value="21:30">21:30</option>
+          <option value="22:00">22:00</option>
+          <option value="22:30">22:30</option>
+          <option value="23:00">23:00</option>
+          <option value="23:30">23:30</option>
+          <option value="00:00">00:00</option>
+    </select>
 
-  <input
-    type="text"
-    id="cliente"
-    name="cliente"
-    placeholder="Nombre del cliente/equipo"
-    required
-  />
+    <input
+      type="number"
+      id="duracao"
+      name="duracao"
+      placeholder="Duración en horas"
+      min="1"
+      max="10"
+      oninput="calcularValor()"
+      required
+    />
 
-   <input
-    type="text"
-    id="whatsapp"
-    name="whatsapp"
-    placeholder="Número de WhatsApp (ej. +59170123456)"
-    required
-  />
+    <input
+      type="text"
+      id="cliente"
+      name="cliente"
+      placeholder="Nombre del cliente/equipo"
+      required
+    />
 
-  <input
-    type="email"
-    id="email"
-    name="email"
-    placeholder="Correo electrónico"
-    required
-  />
+    <input
+      type="text"
+      id="whatsapp"
+      name="whatsapp"
+      placeholder="Número de WhatsApp (ej. +59170123456)"
+      required
+    />
 
-  <input type="text" id="valorTotal" name="valorTotal" placeholder="Valor total" readonly />
+    <input
+      type="email"
+      id="email"
+      name="email"
+      placeholder="Correo electrónico"
+      required
+    />
 
-  <button type="button" class="btn-confirmar" onclick="enviarReserva()">Reservar</button>
-  <button type="button" class="btn-cancelar" onclick="fecharFormulario()">Cancelar</button>
-</form>
+    <input type="text" id="valorTotal" name="valorTotal" placeholder="Valor total" readonly />
+
+    <button type="button" class="btn-confirmar" onclick="enviarReserva()">Reservar</button>
+    <button type="button" class="btn-cancelar" onclick="fecharFormulario()">Cancelar</button>
+  </form>
 
    
   </main>
@@ -154,8 +158,43 @@
     integrity="sha256-pkQ8w3LmX+G7XWz+rgzjkwXQ5HzcIj3BS3Zfj9DqkEY="
     crossorigin=""
   ></script>
+<script>
+function getQueryParams() {
+    const params = {};
+    const queryString = window.location.search.substring(1);
+    const pairs = queryString.split("&");
 
+    pairs.forEach(pair => {
+      const [key, value] = pair.split("=");
+      if (key && value) {
+        params[key] = decodeURIComponent(value.replace(/\+/g, " "));
+      }
+    });
+
+    return params;
+  }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    const params = getQueryParams();
+
+    if (params.cancha) {
+      const titulo = document.getElementById("tituloCampo");
+      if (titulo) titulo.textContent = `Reserva - ${params.cancha}`;
+    }
+
+    if (params.data) {
+      const dataInput = document.getElementById("data");
+      if (dataInput) dataInput.value = params.data;
+    }
+
+    if (params.hora) {
+      const horaSelect = document.getElementById("hora");
+      if (horaSelect) horaSelect.value = params.hora;
+    }
+  });
+</script>
   <script>
+   
     // Variável global para a cancha selecionada
     let campoSeleccionado = '';
 
@@ -203,74 +242,57 @@ function abrirFormulario(campo) {
       document.getElementById('valorTotal').value = total.toFixed(2) + ' Bs';
     }
 
-    // Função para enviar a reserva
-      function enviarReserva() {
-        const data = document.getElementById('data').value;
-        const hora = document.getElementById('hora').value;
-        const duracao = document.getElementById('duracao').value;
-        const cliente = document.getElementById('cliente').value;
-        const valor = document.getElementById('valorTotal').value;
-        const whatsapp = document.getElementById('whatsapp').value;
-        const email = document.getElementById('email').value;
-        if (!data || !hora || !duracao || !cliente || !valor || !whatsapp || !email) {
-          alert('¡Rellena todos los campos!');
-          return;
-        }
 
-        // Criar FormData para envio
-        const formData = new FormData();
-        formData.append('cancha', campoSeleccionado);
-        formData.append('data', data);
-        formData.append('hora', hora);
-        formData.append('duracao', duracao);
-        formData.append('cliente', cliente);
-        formData.append('valor', valor);
-        formData.append('whatsapp', whatsapp);
-        formData.append('email', email);
-      fetch('reserva.php', {
-        method: 'POST',
-        body: formData,
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Erro na resposta do servidor');
-          }
-          return response.text();
-        })
-        .then((resultado) => {
-  // Verifica se o resultado indica disponibilidade
-  if (resultado.includes("Reserva confirmada")) {
-    alert('✅ ' + resultado);
+function enviarReserva() {
+  const data = document.getElementById('data').value;
+  const hora = document.getElementById('hora').value;
+  const duracao = document.getElementById('duracao').value;
+  const cliente = document.getElementById('cliente').value;
+  const valor = document.getElementById('valorTotal').value;
+  const whatsapp = document.getElementById('whatsapp').value;
+  const email = document.getElementById('email').value;
 
-    // Montar mensagem para WhatsApp
-    const numeroWhatsApp = '59167728519';
-    const mensaje = 
-`📅 *Reserva de Cancha: ${campoSeleccionado}*
-🗓️ Fecha: ${data}
-🕒 Hora: ${hora}
-⏳ Duración: ${duracao} horas
-👤 Cliente: ${cliente}
-💵 Valor Total: ${valor}
-📱 WhatsApp: ${whatsapp}
-📧 Email: ${email}
+  if (!data || !hora || !duracao || !cliente || !valor || !whatsapp || !email) {
+    alert('¡Rellena todos los campos!');
+    return;
+  }
 
-¡Gracias por tu reserva! 🙌`;
+  const formData = new FormData();
+  formData.append('cancha', campoSeleccionado);
+  formData.append('data', data);
+  formData.append('hora', hora);
+  formData.append('duracao', duracao);
+  formData.append('cliente', cliente);
+  formData.append('valor', valor);
+  formData.append('whatsapp', whatsapp);
+  formData.append('email', email);
 
-    const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
-    window.open(urlWhatsApp, '_blank');
+ fetch('reserva.php', {
+  method: 'POST',
+  body: formData,
+})
+.then((res) => res.json())
+.then((resultado) => {
+  if (resultado.status === 'sucesso') {
+    alert(resultado.mensagem);
 
-    // ✅ Fechar o formulário somente se estiver tudo OK
+    if (resultado.disponivel === true && resultado.whatsapplink) {
+      const confirmar = confirm("Deseja enviar a confirmação pelo WhatsApp?");
+      if (confirmar) {
+        window.open(resultado.whatsapplink, '_blank');
+      }
+    }
+
     fecharFormulario();
   } else {
-    // ❌ Mostrar mensagem se não estiver disponível
-    alert("❌ " + resultado + "\n\nPor favor, elige otra cancha, fecha u horario.");
-  } 
+    alert(resultado.mensagem);
+  }
 })
-      }
-         
-    
-
-
+.catch((error) => {
+  alert('❌ Erro ao registrar reserva.');
+  console.error('Erro no fetch:', error);
+});
+  }
     // Iniciar mapa Leaflet (exemplo simples)
     const map = L.map('mapid').setView([-17.7833, -63.1821], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
