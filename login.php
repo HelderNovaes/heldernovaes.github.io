@@ -5,13 +5,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = $_POST['usuario'];
     $senha = $_POST['senha'];
 
-    // Usuario y contraseña que vas a usar para el admin
     $usuarioAdmin = 'admin';
     $senhaAdmin = '1234';
 
     if ($usuario === $usuarioAdmin && $senha === $senhaAdmin) {
         $_SESSION['admin_logado'] = true;
-        header('Location: admin.php'); // Redirige al panel
+        header('Location: admin.php');
         exit();
     } else {
         $erro = "Usuario o contraseña incorrectos";
@@ -25,17 +24,121 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8" />
 <title>Login Admin - Pentagol</title>
 <style>
-  body { font-family: Arial, sans-serif; background: #f7f7f7; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0f2f5;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .login-container {
-    width: 300px; margin: 100px auto; background: white; padding: 20px;
-    border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
   }
-  input { width: 100%; padding: 10px; margin: 10px 0; }
+
+  h2 {
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .error {
+    color: red;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+  }
+
   button {
-    width: 100%; padding: 10px; background: #2c3e50; color: white; border: none; cursor: pointer;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
   }
-  button:hover { background: #34495e; }
-  .error { color: red; }
+
+  button:hover {
+    background-color: #0056b3;
+  }
+  @media (max-width: 480px) {
+  .login-container {
+    padding: 1.5rem 1rem;
+    max-width: 90%;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  button {
+    font-size: 0.95rem;
+    padding: 0.65rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+}
+
+/* Para tablets - largura média */
+@media (min-width: 481px) and (max-width: 768px) {
+  .login-container {
+    max-width: 80%;
+    padding: 2rem;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  button {
+    font-size: 1rem;
+    padding: 0.75rem;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+}
+  @media (max-width: 400px) {
+  .login-container {
+    padding: 1.5rem 1rem;
+    max-width: 90%;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  button {
+    font-size: 0.95rem;
+    padding: 0.65rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+}
+
 </style>
 </head>
 <body>
