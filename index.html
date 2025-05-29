@@ -238,21 +238,38 @@ function abrirFormulario(campo) {
           return response.text();
         })
         .then((resultado) => {
-          alert('✅ ' + resultado);
+  // Verifica se o resultado indica disponibilidade
+  if (resultado.includes("Reserva confirmada")) {
+    alert('✅ ' + resultado);
 
-          // Enviar mensagem no WhatsApp
-          const numeroWhatsApp = '59167728519';
-          const mensaje = `Reserva de Cancha: ${campoSeleccionado}\nFecha: ${data}\nHora: ${hora}\nDuración: ${duracao} horas\nCliente: ${cliente}\nValor Total: ${valor}\n\n¡Gracias por tu reserva!`;
-          const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
-          window.open(urlWhatsApp, '_blank');
+    // Montar mensagem para WhatsApp
+    const numeroWhatsApp = '59167728519';
+    const mensaje = 
+`📅 *Reserva de Cancha: ${campoSeleccionado}*
+🗓️ Fecha: ${data}
+🕒 Hora: ${hora}
+⏳ Duración: ${duracao} horas
+👤 Cliente: ${cliente}
+💵 Valor Total: ${valor}
+📱 WhatsApp: ${whatsapp}
+📧 Email: ${email}
 
-          fecharFormulario();
-        })
-        .catch((error) => {
-          alert('❌ Erro ao registrar reserva.');
-          console.error('Erro no fetch:', error);
-        });
-    }
+¡Gracias por tu reserva! 🙌`;
+
+    const urlWhatsApp = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+    window.open(urlWhatsApp, '_blank');
+
+    // ✅ Fechar o formulário somente se estiver tudo OK
+    fecharFormulario();
+  } else {
+    // ❌ Mostrar mensagem se não estiver disponível
+    alert("❌ " + resultado + "\n\nPor favor, elige otra cancha, fecha u horario.");
+  } 
+})
+      }
+         
+    
+
 
     // Iniciar mapa Leaflet (exemplo simples)
     const map = L.map('mapid').setView([-17.7833, -63.1821], 13);
