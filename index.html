@@ -45,12 +45,12 @@
    <a href="disponivel.html" class="btn-disponivel">Ver Horários Disponíveis</a>
   
   <main>
-    <div class="campos" id="cancha">
-      <div class="campo" id="Cancha1" onclick="abrirFormulario('Cancha 1')">
+    <div class="campos">
+      <div class="campo" onclick="abrirFormulario('Cancha 1')">
         <img src="img/campo1.png" alt="Campo 1" />
         <h3>Cancha de 7 jugadores <br> (Cancha 1)</h3>
       </div>
-      <div class="campo" id="cancha2" onclick="abrirFormulario('Cancha 2')">
+      <div class="campo" onclick="abrirFormulario('Cancha 2')">
         <img src="img/campo1.png" alt="Campo 2" />
         <h3>Cancha de 6 jugadores <br> (Cancha 2)</h3>
       </div>
@@ -175,41 +175,7 @@
     integrity="sha256-pkQ8w3LmX+G7XWz+rgzjkwXQ5HzcIj3BS3Zfj9DqkEY="
     crossorigin=""
   ></script>
-<script>
-function getQueryParams() {
-    const params = {};
-    const queryString = window.location.search.substring(1);
-    const pairs = queryString.split("&");
 
-    pairs.forEach(pair => {
-      const [key, value] = pair.split("=");
-      if (key && value) {
-        params[key] = decodeURIComponent(value.replace(/\+/g, " "));
-      }
-    });
-
-    return params;
-  }
-
-  window.addEventListener("DOMContentLoaded", () => {
-    const params = getQueryParams();
-
-    if (params.cancha) {
-      const titulo = document.getElementById("tituloCampo");
-      if (titulo) titulo.textContent = `Reserva - ${params.cancha}`;
-    }
-
-    if (params.data) {
-      const dataInput = document.getElementById("data");
-      if (dataInput) dataInput.value = params.data;
-    }
-
-    if (params.hora) {
-      const horaSelect = document.getElementById("hora");
-      if (horaSelect) horaSelect.value = params.hora;
-    }
-  });
-</script>
   <script>
    
     // Variável global para a cancha selecionada
