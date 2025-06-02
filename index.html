@@ -124,6 +124,7 @@
       oninput="calcularValor()"
       required
     />
+<div id="statusHorario" style="margin-top: 10px; font-weight: bold;"></div>
 
     <input
       type="text"
@@ -177,6 +178,97 @@
   ></script>
 
   <script>
+    // ... tu código previo ...
+
+function validarHorario() {
+  const cancha = campoSeleccionado;
+  const data = document.getElementById('data').value;
+  const hora = document.getElementById('hora').value;
+  const duracao = parseInt(document.getElementById('duracao').value);
+
+  const statusDiv = document.getElementById('statusHorario');
+  const btnReservar = document.querySelector('.btn-confirmar');
+
+  // Si falta algún dato, limpiar mensaje y deshabilitar botón
+  if (!cancha || !data || !hora || !duracao || duracao <= 0) {
+    statusDiv.textContent = '';
+    btnReservar.disabled = true;
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('cancha', cancha);
+  formData.append('data', data);
+  formData.append('hora', hora);
+  formData.append('duracao', duracao);
+
+  fetch('validar_horario.php', {
+    method: 'POST',
+    body: formData,
+  })
+    .then(res => res.json())
+    .then(res => {
+      if (res.disponible) {
+        statusDiv.textContent = res.mensaje;
+        statusDiv.style.color = 'green';
+        btnReservar.disabled = false;
+      } else {
+        statusDiv.textContent = res.mensaje;
+        statusDiv.style.color = 'red';
+        btnReservar.disabled = true;
+      }
+    })
+    .catch(() => {
+      statusDiv.textContent = 'Error validando horario.';
+      statusDiv.style.color = 'orange';
+      btnReservar.disabled = true;
+    });
+}
+
+// Llamar a validarHorario cuando cambien cancha, fecha, hora o duración
+
+// Como cancha se elige con clic, agregar llamada en abrirFormulario
+function abrirFormulario(campo) {
+  campoSeleccionado = campo;
+  document.getElementById('tituloCampo').textContent = `Reserva - ${campo}`;
+  document.getElementById('formulario').style.display = 'block';
+  document.getElementById('overlay').style.display = 'block';
+
+  // Limpiar campos y valor total
+  document.getElementById('data').value = '';
+  document.getElementById('hora').value = '';
+  document.getElementById('duracao').value = '';
+  document.getElementById('cliente').value = '';
+  document.getElementById('valorTotal').value = '';
+  document.getElementById('whatsapp').value = '';
+  document.getElementById('email').value = '';
+
+  // Limpiar estado y bloquear botón
+  document.getElementById('statusHorario').textContent = '';
+  document.querySelector('.btn-confirmar').disabled = true;
+}
+
+// Modificar onchange y oninput para validar en tiempo real
+document.getElementById('data').addEventListener('change', () => {
+  validarHorario();
+});
+document.getElementById('hora').addEventListener('change', () => {
+  validarHorario();
+});
+document.getElementById('duracao').addEventListener('input', () => {
+  calcularValor();
+  validarHorario();
+});
+
+// Al abrir el formulario el botón reservar estará bloqueado hasta validar
+document.querySelector('.btn-confirmar').disabled = true;
+
+  
+function fecharFormulario() {
+  document.getElementById('formulario').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+}
+
   // Variable global para la cancha seleccionada
   let campoSeleccionado = '';
 
