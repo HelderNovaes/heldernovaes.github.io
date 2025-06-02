@@ -5,7 +5,7 @@ header('Content-Type: text/plain');
 
 if (!isset($_SESSION['admin_logado'])) {
     http_response_code(403);
-    echo "Acesso negado.";
+    echo "Acceso denegado.";
     exit();
 }
 
@@ -18,16 +18,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']) && is_numeric($
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        echo "ok"; // resposta esperada pelo JS
+        echo "ok"; // respuesta esperada por el JS
     } else {
         http_response_code(500);
-        echo "Erro ao remover a reserva.";
+        echo "Error al eliminar la reserva.";
     }
 
     $stmt->close();
 } else {
     http_response_code(400);
-    echo "ID inválido ou método incorreto.";
+    echo "ID inválido o método incorrecto.";
 }
 ?>
-
