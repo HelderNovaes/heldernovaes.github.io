@@ -396,39 +396,36 @@ button[type="submit"]:active {
 
     </style>
     <script>
-        function removerReserva(id) {
-            if (confirm('Deseja realmente remover esta reserva?')) {
-                window.location.href = 'remover_reserva.php?id=' + id;
-            }
+    function removerReserva(id) {
+        if (confirm('¿Realmente deseas eliminar esta reserva?')) {
+            window.location.href = 'remover_reserva.php?id=' + id;
         }
-    </script>
+    }
+</script>
 </head>
 <body>
 
-    <h1>Painel de Admin - Reservas</h1>
+    <h1>Panel de Administración - Reservas</h1>
 
     <div class="actions">
-      <form method="get">
-    <input type="text" name="busca" placeholder="Buscar por cliente, WhatsApp ou email" value="<?= htmlspecialchars($busca) ?>" />
-    <button type="submit">Buscar</button>
-</form>
-
-
-
+        <form method="get">
+            <input type="text" name="busca" placeholder="Buscar por cliente, WhatsApp o correo electrónico" value="<?= htmlspecialchars($busca) ?>" />
+            <button type="submit">Buscar</button>
+        </form>
 
         <div>
-            <a href="index.html" class="new-reserva">Nova Reserva</a>
-            <a href="logout.php" class="logout">Sair</a>
+            <a href="index.html" class="new-reserva">Nueva Reserva</a>
+            <a href="logout.php" class="logout">Salir</a>
         </div>
     </div>
 
-   <div id="filtros">
-    <label for="fechaFiltro">Filtrar por Fecha:</label>
-    <input type="text" id="fechaFiltro" placeholder="YYYY-MM-DD">
+    <div id="filtros">
+        <label for="fechaFiltro">Filtrar por Fecha:</label>
+        <input type="text" id="fechaFiltro" placeholder="AAAA-MM-DD">
 
-    <label for="horaFiltro">Filtrar por Hora:</label>
-    <input type="text" id="horaFiltro" placeholder="HH:MM">
-</div>
+        <label for="horaFiltro">Filtrar por Hora:</label>
+        <input type="text" id="horaFiltro" placeholder="HH:MM">
+    </div>
 
     <table class="responsiva" id="tabelaPrincipal">
         <thead>
@@ -440,10 +437,10 @@ button[type="submit"]:active {
                 <th>Duración</th>
                 <th>Cliente</th>
                 <th>WhatsApp</th>
-                <th>Email</th>
+                <th>Correo electrónico</th>
                 <th>Valor Total</th>
-                <th>Registrado em</th>
-                <th>Ações</th>
+                <th>Registrado en</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -460,11 +457,11 @@ button[type="submit"]:active {
                             <?= htmlspecialchars($row['whatsapp']) ?>
                         </a>
                     </td>
-                    <td data-label="Email"><?= htmlspecialchars($row['email']) ?></td>
+                    <td data-label="Correo electrónico"><?= htmlspecialchars($row['email']) ?></td>
                     <td data-label="Valor Total"><?= number_format($row['valor_total'], 2, ',', '.') ?> Bs</td>
-                    <td data-label="Registrado em"><?= htmlspecialchars($row['data_reserva']) ?></td>
-                    <td data-label="Ações">
-                        <span class="remover" onclick="removerReserva(<?= $row['id'] ?>)">Remover</span>
+                    <td data-label="Registrado en"><?= htmlspecialchars($row['data_reserva']) ?></td>
+                    <td data-label="Acciones">
+                        <span class="remover" onclick="removerReserva(<?= $row['id'] ?>)">Eliminar</span>
                     </td>
                 </tr>
             <?php endwhile; ?>
@@ -474,11 +471,9 @@ button[type="submit"]:active {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/i18n/jquery-ui-i18n.min.js"></script>
 <script>
   $(function() {
-    // Detecta o idioma do navegador
-    var userLang = navigator.language || navigator.userLanguage; // pt-BR, es, en, etc.
+    var userLang = navigator.language || navigator.userLanguage;
     userLang = userLang.toLowerCase();
 
-    // Aplica regional se existir, senão usa espanhol como padrão
     $.datepicker.setDefaults($.datepicker.regional[userLang] || $.datepicker.regional["es"]);
 
     $("#fechaFiltro").datepicker({
@@ -487,10 +482,9 @@ button[type="submit"]:active {
   });
 </script>
 
-
 <script>
 function removerReserva(id) {
-    if (!confirm("Tem certeza que deseja remover esta reserva?")) {
+    if (!confirm("¿Estás seguro de que deseas eliminar esta reserva?")) {
         return;
     }
 
@@ -504,7 +498,6 @@ function removerReserva(id) {
     .then(response => response.text())
     .then(data => {
         if (data.trim() === 'ok') {
-            // Encontrar a linha da tabela com o ID correspondente e removê-la
             const rows = document.querySelectorAll('tbody tr');
             for (let row of rows) {
                 const idCell = row.querySelector('td[data-label="ID"]');
@@ -514,69 +507,57 @@ function removerReserva(id) {
                 }
             }
         } else {
-            alert("Erro ao remover a reserva: " + data);
+            alert("Error al eliminar la reserva: " + data);
         }
     })
     .catch(error => {
-        console.error('Erro:', error);
-        alert("Erro ao tentar remover a reserva.");
+        console.error('Error:', error);
+        alert("Error al intentar eliminar la reserva.");
     });
 }
 $(document).ready(function() {
-    // Detectar el idioma del navegador
-    var userLang = (navigator.language || navigator.userLanguage).toLowerCase(); // ej: 'es', 'pt-br'
+    var userLang = (navigator.language || navigator.userLanguage).toLowerCase();
     
-    // Mapeo de idiomas soportados por DataTables
     var dataTablesLangMap = {
         'es': 'es-ES',
         'pt': 'pt-BR',
         'en': 'en-GB',
         'fr': 'fr-FR',
-        // agrega más si quieres
     };
 
-    // Normalizar idioma base
-    var baseLang = userLang.split('-')[0]; // ej: 'es' de 'es-AR'
+    var baseLang = userLang.split('-')[0];
 
-    // Usar idioma detectado o default (español)
     var dataTablesLang = dataTablesLangMap[baseLang] || 'es-ES';
 
-    // Inicializar DataTables con idioma detectado
     var table = $('table').DataTable({
         language: {
             url: "//cdn.datatables.net/plug-ins/1.13.4/i18n/" + dataTablesLang + ".json"
         }
     });
 
-    // Inicializar Datepicker con idioma detectado
     $.datepicker.setDefaults($.datepicker.regional[userLang] || $.datepicker.regional[baseLang] || $.datepicker.regional["es"]);
 
-    // Datepicker personalizado que aparece un poco más abajo
-   $("#fechaFiltro").datepicker({
-    dateFormat: "yy-mm-dd",
-    beforeShow: function(input, inst) {
-        setTimeout(function() {
-            inst.dpDiv.css({
-                top: $(input).offset().top -150, // Aparece un poco más arriba del input
-                left: $(input).offset().left + $(input).outerWidth() + 10 // Aparece al lado derecho del input
-            });
-        }, 0);
-    }
-});
+    $("#fechaFiltro").datepicker({
+        dateFormat: "yy-mm-dd",
+        beforeShow: function(input, inst) {
+            setTimeout(function() {
+                inst.dpDiv.css({
+                    top: $(input).offset().top -150,
+                    left: $(input).offset().left + $(input).outerWidth() + 10
+                });
+            }, 0);
+        }
+    });
 
-    // Filtro por fecha
     $('#fechaFiltro').on('keyup change', function () {
         table.column(2).search(this.value).draw();
     });
 
-    // Filtro por hora
     $('#horaFiltro').on('keyup change', function () {
         table.column(3).search(this.value).draw();
     });
 });
-
 </script>
-
 
 </body>
 </html>

@@ -16,7 +16,7 @@ function carregarHorarios() {
   const lista = document.getElementById('listaHorarios');
 
   if (!cancha || !data) {
-    alert('Escolha a cancha e a data.');
+    alert('Elegí la cancha y la fecha.');
     return;
   }
 

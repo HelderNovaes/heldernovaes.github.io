@@ -177,114 +177,113 @@
   ></script>
 
   <script>
-   
-    // Variável global para a cancha selecionada
-    let campoSeleccionado = '';
+  // Variable global para la cancha seleccionada
+  let campoSeleccionado = '';
 
-    // Preço por hora para cada cancha
-    const preciosPorHora = {
-      'Cancha 1': 170,
-      'Cancha 2': 150,
-      'Cancha 3': 100,
-      'Cancha 4': 100,
-    };
+  // Precio por hora para cada cancha
+  const preciosPorHora = {
+    'Cancha 1': 170,
+    'Cancha 2': 150,
+    'Cancha 3': 100,
+    'Cancha 4': 100,
+  };
 
-    // Função para abrir o formulário e definir título e cancha selecionada
-function abrirFormulario(campo) {
-  campoSeleccionado = campo;
-  document.getElementById('tituloCampo').textContent = `Reserva - ${campo}`;
-  document.getElementById('formulario').style.display = 'block';
-  document.getElementById('overlay').style.display = 'block';
+  // Función para abrir el formulario y definir título y cancha seleccionada
+  function abrirFormulario(campo) {
+    campoSeleccionado = campo;
+    document.getElementById('tituloCampo').textContent = `Reserva - ${campo}`;
+    document.getElementById('formulario').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
 
-  // Limpar campos e valor total
-  document.getElementById('data').value = '';
-  document.getElementById('hora').value = '';
-  document.getElementById('duracao').value = '';
-  document.getElementById('cliente').value = '';
-  document.getElementById('valorTotal').value = '';
-  document.getElementById('whatsapp').value = '';
-  document.getElementById('email').value = '';
-}
-
-    // Função para fechar o formulário
-    function fecharFormulario() {
-      document.getElementById('formulario').style.display = 'none';
-      document.getElementById('overlay').style.display = 'none';
-    }
-
-    // Função para calcular o valor total com base na duração e cancha
-    function calcularValor() {
-      const duracao = parseFloat(document.getElementById('duracao').value);
-      if (!duracao || duracao <= 0) {
-        document.getElementById('valorTotal').value = '';
-        return;
-      }
-
-      const precoHora = preciosPorHora[campoSeleccionado] || 0;
-      const total = precoHora * duracao;
-      document.getElementById('valorTotal').value = total.toFixed(2) + ' Bs';
-    }
-
-
-function enviarReserva() {
-  const data = document.getElementById('data').value;
-  const hora = document.getElementById('hora').value;
-  const duracao = document.getElementById('duracao').value;
-  const cliente = document.getElementById('cliente').value;
-  const valor = document.getElementById('valorTotal').value;
-  const whatsapp = document.getElementById('whatsapp').value;
-  const email = document.getElementById('email').value;
-
-  if (!data || !hora || !duracao || !cliente || !valor || !whatsapp || !email) {
-    alert('¡Rellena todos los campos!');
-    return;
+    // Limpiar campos y valor total
+    document.getElementById('data').value = '';
+    document.getElementById('hora').value = '';
+    document.getElementById('duracao').value = '';
+    document.getElementById('cliente').value = '';
+    document.getElementById('valorTotal').value = '';
+    document.getElementById('whatsapp').value = '';
+    document.getElementById('email').value = '';
   }
 
-  const formData = new FormData();
-  formData.append('cancha', campoSeleccionado);
-  formData.append('data', data);
-  formData.append('hora', hora);
-  formData.append('duracao', duracao);
-  formData.append('cliente', cliente);
-  formData.append('valor', valor);
-  formData.append('whatsapp', whatsapp);
-  formData.append('email', email);
+  // Función para cerrar el formulario
+  function cerrarFormulario() {
+    document.getElementById('formulario').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+  }
 
- fetch('reserva.php', {
-  method: 'POST',
-  body: formData,
-})
-.then((res) => res.json())
-.then((resultado) => {
-  if (resultado.status === 'sucesso') {
-    alert(resultado.mensagem);
-
-    if (resultado.disponivel === true && resultado.whatsapplink) {
-      const confirmar = confirm("Deseja enviar a confirmação pelo WhatsApp?");
-      if (confirmar) {
-        window.open(resultado.whatsapplink, '_blank');
-      }
+  // Función para calcular el valor total según duración y cancha
+  function calcularValor() {
+    const duracao = parseFloat(document.getElementById('duracao').value);
+    if (!duracao || duracao <= 0) {
+      document.getElementById('valorTotal').value = '';
+      return;
     }
 
-    fecharFormulario();
-  } else {
-    alert(resultado.mensagem);
+    const precioHora = preciosPorHora[campoSeleccionado] || 0;
+    const total = precioHora * duracao;
+    document.getElementById('valorTotal').value = total.toFixed(2) + ' Bs';
   }
-})
-.catch((error) => {
-  alert('❌ Erro ao registrar reserva.');
-  console.error('Erro no fetch:', error);
-});
+
+  function enviarReserva() {
+    const data = document.getElementById('data').value;
+    const hora = document.getElementById('hora').value;
+    const duracao = document.getElementById('duracao').value;
+    const cliente = document.getElementById('cliente').value;
+    const valor = document.getElementById('valorTotal').value;
+    const whatsapp = document.getElementById('whatsapp').value;
+    const email = document.getElementById('email').value;
+
+    if (!data || !hora || !duracao || !cliente || !valor || !whatsapp || !email) {
+      alert('¡Rellená todos los campos!');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('cancha', campoSeleccionado);
+    formData.append('data', data);
+    formData.append('hora', hora);
+    formData.append('duracao', duracao);
+    formData.append('cliente', cliente);
+    formData.append('valor', valor);
+    formData.append('whatsapp', whatsapp);
+    formData.append('email', email);
+
+    fetch('reserva.php', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((res) => res.json())
+      .then((resultado) => {
+        if (resultado.status === 'sucesso') {
+          alert(resultado.mensagem);
+
+          if (resultado.disponivel === true && resultado.whatsapplink) {
+            const confirmar = confirm("¿Querés enviar la confirmación por WhatsApp?");
+            if (confirmar) {
+              window.open(resultado.whatsapplink, '_blank');
+            }
+          }
+
+          cerrarFormulario();
+        } else {
+          alert(resultado.mensagem);
+        }
+      })
+      .catch((error) => {
+        alert('❌ Error al registrar la reserva.');
+        console.error('Error en el fetch:', error);
+      });
   }
-    // Iniciar mapa Leaflet (exemplo simples)
-    const map = L.map('mapid').setView([-17.7833, -63.1821], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap',
-    }).addTo(map);
 
-    // Pode adicionar marcadores, etc. aqui, se
+  // Iniciar mapa Leaflet (ejemplo simple)
+  const map = L.map('mapid').setView([-17.7833, -63.1821], 13);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap',
+  }).addTo(map);
 
-  </script>
+  // Aquí podés agregar marcadores, etc.
+</script>
+
   </body>
 </html>

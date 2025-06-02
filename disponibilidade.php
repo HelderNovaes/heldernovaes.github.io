@@ -6,7 +6,7 @@ $cancha = $_GET['cancha'] ?? '';
 $data = $_GET['data'] ?? '';
 
 if (!$cancha || !$data) {
-    echo json_encode(['error' => 'Parâmetros inválidos.']);
+    echo json_encode(['error' => 'Parámetros inválidos.']);
     exit;
 }
 
