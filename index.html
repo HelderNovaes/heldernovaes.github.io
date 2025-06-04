@@ -11,6 +11,8 @@
     integrity="sha256-o9N1jVv9yyL0zNG0BtEVpYzZR+V1K5G8UO8m5H6vR2o="
     crossorigin=""
   />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <link rel="stylesheet" href="styles.css" />
 <style>
 
@@ -36,7 +38,11 @@
   font-size: 16px;
   line-height: 1.6;
 }
-
+.preto{
+  color: #fafafa;
+  font-size: 14px;
+  margin-top: 20px;
+}
 .servicios-container, .galeria-container, .precios-container {
   display: flex;
   justify-content: center;
@@ -101,6 +107,7 @@
   z-index: 100;
   width: 60px;
   height: 60px;
+  color: aqua;
 }
 
 .whatsapp-float img {
@@ -115,6 +122,24 @@
   transform: scale(1.1);
 }
 
+.login-icon {
+  font-size: 30px;
+  color: #2c3e50;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  
+
+}
+
+.login-icon:hover {
+  color: #2980b9;
+}
+
   </style>
 </head>
 
@@ -126,6 +151,10 @@
       <p>Reserva tu cancha en línea, fácil y rápido</p>
     </div>
  
+  <!-- Ícone de login no canto direito -->
+  <a href="login.php" class="login-icon" title="Login Admin">
+    <i class="fas fa-user-circle"></i>
+  </a>
 
   </header>
 
@@ -295,7 +324,7 @@
 
 
   <footer>
-    <p>&copy; 2025 Pentagol. Todos los derechos reservados.</p>
+    <p class="preto">&copy; 2025 Pentagol. Todos los derechos reservados.</p>
     <div class="redes-sociales">
       <a href="https://facebook.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/20/20673.png" alt="Facebook" /></a>
       <a href="https://instagram.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" /></a>

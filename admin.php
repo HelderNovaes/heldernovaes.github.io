@@ -461,6 +461,7 @@ button[type="submit"]:active {
                     <td data-label="Valor Total"><?= number_format($row['valor_total'], 2, ',', '.') ?> Bs</td>
                     <td data-label="Registrado en"><?= htmlspecialchars($row['data_reserva']) ?></td>
                     <td data-label="Acciones">
+                        <a href="editar_reserva.php?id=<?= $row['id'] ?>">Editar</a>
                         <span class="remover" onclick="removerReserva(<?= $row['id'] ?>)">Eliminar</span>
                     </td>
                 </tr>
