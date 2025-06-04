@@ -13,7 +13,72 @@
   />
   <link rel="stylesheet" href="styles.css" />
 <style>
- 
+
+  #sobre, #servicios, #galeria, #precios {
+  padding: 40px 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.7); /* leve transparência */
+  backdrop-filter: blur(6px); /* efeito de desfoque atrás */
+  border-radius: 20px;
+  margin: 30px auto;
+  max-width: 1100px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+#sobre h2, #servicios h2, #galeria h2, #precios h2 {
+  color: #222;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+#sobre p, #servicios p, #galeria p, #precios p {
+  color: #333;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.servicios-container, .galeria-container, .precios-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+.servicio, .galeria-container img, .precio {
+  max-width: 300px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(3px);
+  padding: 15px;
+}
+
+.servicio img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.galeria-container img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.precio h3 {
+  color: #000;
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.precio p {
+  font-size: 18px;
+  color: #006400;
+  font-weight: bold;
+}
+
   .btn-disponivel {
     display: inline-block;
     background-color: #28a745;
@@ -29,6 +94,27 @@
   .btn-disponivel:hover {
     background-color: #218838;
   }
+  .whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+  width: 60px;
+  height: 60px;
+}
+
+.whatsapp-float img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s;
+  border-radius: 50%;
+}
+
+.whatsapp-float img:hover {
+  transform: scale(1.1);
+}
+
   </style>
 </head>
 
@@ -42,21 +128,27 @@
  
 
   </header>
+
+  <a href="https://wa.me/59167728519" class="whatsapp-float" target="_blank">
+  <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png" alt="WhatsApp" />
+</a>
+
+
    <a href="disponivel.html" class="btn-disponivel">Ver Horários Disponíveis</a>
   
   <main>
     <div class="campos">
       <div class="campo" onclick="abrirFormulario('Cancha 1')">
         <img src="img/campo1.png" alt="Campo 1" />
-        <h3>Cancha de 7 jugadores <br> (Cancha 1)</h3>
+        <h3>Cancha de 8 jugadores <br> (Cancha 1)</h3>
       </div>
       <div class="campo" onclick="abrirFormulario('Cancha 2')">
         <img src="img/campo1.png" alt="Campo 2" />
-        <h3>Cancha de 6 jugadores <br> (Cancha 2)</h3>
+        <h3>Cancha de 7 jugadores <br> (Cancha 2)</h3>
       </div>
       <div class="campo" onclick="abrirFormulario('Cancha 3')">
         <img src="img/campo1.png" alt="Campo 3" />
-        <h3>Cancha de 5 jugadores <br> (Cancha 3)</h3>
+        <h3>Cancha de 6 jugadores <br> (Cancha 3)</h3>
       </div>
       <div class="campo" onclick="abrirFormulario('Cancha 4')">
         <img src="img/campo1.png" alt="Campo 4" />
@@ -161,12 +253,56 @@
 
   <div id="mapid"></div>
 
+<section id="sobre">
+  <h2>Sobre Pentagol</h2>
+  <p>
+    Pentagol es mucho más que un complejo deportivo. Aquí encontrarás canchas para distintos tamaños de equipos, una escuelita de fútbol para niños, área de churrasquera para compartir con amigos y una gran variedad de bebidas para disfrutar después del partido.
+  </p>
+</section>
+
+<section id="servicios">
+  <h2>Servicios Disponibles</h2>
+  <div class="servicios-container">
+    <div class="servicio">
+      <img src="img/escolinha.png" alt="Escuelita de Fútbol" />
+      <h3>Escuelita de Fútbol</h3>
+      <p>Clases para niños con instructores capacitados. Fomentamos el talento y el trabajo en equipo.</p>
+    </div>
+    <div class="servicio">
+      <img src="img/churrasqueira.png" alt="Churrasquera" />
+      <h3>Área de Churrasquera</h3>
+      <p>Ideal para fiestas y reuniones. Espacio cómodo para compartir después del partido.</p>
+    </div>
+    <div class="servicio">
+      <img src="img/bebidas.png" alt="Bebidas" />
+      <h3>Bebidas</h3>
+      <p>Vendemos refrescos, cervezas y energizantes para mantenerte con energía y disfrutar.</p>
+    </div>
+  </div>
+</section>
+
+<section id="galeria">
+  <h2>Galería</h2>
+  <div class="galeria-container">
+    <img src="img/galeria1.jpg" alt="Cancha de fútbol" />
+    <img src="img/churrasqueira.png" alt="Área de churrasquera" />
+    <img src="img/escolinha.png" alt="Escuelita en acción" />
+  </div>
+</section>
+
+
+
+
+
   <footer>
     <p>&copy; 2025 Pentagol. Todos los derechos reservados.</p>
     <div class="redes-sociales">
       <a href="https://facebook.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/20/20673.png" alt="Facebook" /></a>
       <a href="https://instagram.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" /></a>
-      <a href="https://twitter.com" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter" /></a>
+      <a href="https://www.tiktok.com/" target="_blank">
+  <img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok" />
+</a>
+
     </div>
   </footer>
 
@@ -317,8 +453,8 @@ function fecharFormulario() {
   const preciosPorHora = {
     'Cancha 1': 170,
     'Cancha 2': 150,
-    'Cancha 3': 100,
-    'Cancha 4': 100,
+    'Cancha 3': 140,
+    'Cancha 4': 130,
   };
 
   // Función para abrir el formulario y definir título y cancha seleccionada
