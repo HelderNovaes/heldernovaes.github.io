@@ -12,7 +12,7 @@ $whatsapp = isset($_POST['whatsapp']) ? $conexao->real_escape_string(trim($_POST
 $email    = isset($_POST['email']) ? $conexao->real_escape_string(trim($_POST['email'])) : '';
 
 // Validar si los campos obligatorios fueron llenados
-if (!$cancha || !$data || !$hora || !$duracao || !$cliente || !$valor || !$whatsapp || !$email) {
+if (!$cancha || !$data || !$hora || !$duracao || !$cliente || !$valor || !$whatsapp) {
     echo json_encode([
         'status' => 'error',
         'mensagem' => '❌ Llena todos los campos obligatorios.',

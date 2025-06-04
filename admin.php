@@ -48,6 +48,8 @@ if (isset($_GET['busca']) && trim($_GET['busca']) !== '') {
 
 <!-- DataTables -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
 <!-- DatePicker (opcional para mejor filtro de fechas) -->
@@ -217,6 +219,10 @@ button[type="submit"]:active {
             text-decoration: none;
             font-weight: bold;
         }
+tr.fade-out {
+    transition: opacity 0.3s ease-out;
+    opacity: 0;
+}
 
 /* Estilo base para os filtros */
 #filtros {
@@ -307,7 +313,21 @@ button[type="submit"]:active {
     padding: 4px;
     color: #333;
 }
+#btnRelatorio {
+    background-color: #17a2b8; /* Azul tipo "info" */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
 
+#btnRelatorio:hover {
+    background-color: #138496;
+}
 .ui-datepicker {
     z-index: 9999 !important;
     background: #fff;
@@ -393,16 +413,32 @@ button[type="submit"]:active {
         max-width: 300px;
     }
 }
-
+.dataTables_filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+.dataTables_filter label {
+    font-weight: bold;
+    color: #333;
+}
+.dataTables_filter input {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    width: 200px;
+    transition: border-color 0.3s ease;
+}
     </style>
-    <script>
-    function removerReserva(id) {
-        if (confirm('¿Realmente deseas eliminar esta reserva?')) {
-            window.location.href = 'remover_reserva.php?id=' + id;
-        }
-    }
-</script>
+   
 </head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
 <body>
 
     <h1>Panel de Administración - Reservas</h1>
@@ -425,6 +461,8 @@ button[type="submit"]:active {
 
         <label for="horaFiltro">Filtrar por Hora:</label>
         <input type="text" id="horaFiltro" placeholder="HH:MM">
+        <button id="btnRelatorio" class="btn btn-info">📄 Generar informe</button>
+
     </div>
 
     <table class="responsiva" id="tabelaPrincipal">
@@ -462,7 +500,9 @@ button[type="submit"]:active {
                     <td data-label="Registrado en"><?= htmlspecialchars($row['data_reserva']) ?></td>
                     <td data-label="Acciones">
                         <a href="editar_reserva.php?id=<?= $row['id'] ?>">Editar</a>
-                        <span class="remover" onclick="removerReserva(<?= $row['id'] ?>)">Eliminar</span>
+                        <span class="remover" onclick="removerReserva(<?= $row['id'] ?>)">
+                            <i class="fas fa-trash-alt"></i>
+                        </span>
                     </td>
                 </tr>
             <?php endwhile; ?>
@@ -481,6 +521,9 @@ button[type="submit"]:active {
       dateFormat: "yy-mm-dd"
     });
   });
+  row.classList.add('fade-out');
+setTimeout(() => row.remove(), 300);
+
 </script>
 
 <script>
@@ -560,5 +603,69 @@ $(document).ready(function() {
 });
 </script>
 
+<script>
+document.getElementById('btnRelatorio').addEventListener('click', function () {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'mm', 'a4');
+
+    doc.setFontSize(11);
+    doc.text("Relatório de Reservas - Folha de Pagamento", 14, 15);
+
+    const data = [];
+    const headers = [];
+
+    const allTh = document.querySelectorAll('#tabelaPrincipal thead th');
+    for (let i = 0; i < allTh.length - 1; i++) {
+        headers.push(allTh[i].innerText.trim());
+    }
+
+    $('#tabelaPrincipal').DataTable().rows({ search: 'applied' }).every(function () {
+        const rowNodes = this.nodes().toArray();
+        rowNodes.forEach(node => {
+            const cells = node.querySelectorAll('td');
+            const rowData = [];
+            for (let i = 0; i < cells.length - 1; i++) {
+                rowData.push(cells[i].innerText.trim());
+            }
+            data.push(rowData);
+        });
+    });
+
+    doc.autoTable({
+        head: [headers],
+        body: data,
+        startY: 20,
+        margin: { top: 20, left: 8, right: 8 },
+        styles: {
+            fontSize: 7.5, // AUMENTADO
+            cellPadding: 1.2,
+            overflow: 'linebreak',
+            valign: 'middle'
+        },
+        columnStyles: {
+            0: { cellWidth: 7 },
+            1: { cellWidth: 12 },
+            2: { cellWidth: 16 },
+            3: { cellWidth: 13 },
+            4: { cellWidth: 13 },
+            5: { cellWidth: 24 },
+            6: { cellWidth: 24 },
+            7: { cellWidth: 28 },
+            8: { cellWidth: 16 },
+            9: { cellWidth: 22 }
+        },
+        tableWidth: 'wrap',
+        theme: 'grid'
+    });
+
+    let nomeCliente = document.querySelector('input[name="busca"]').value.trim();
+    nomeCliente = nomeCliente.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '').toLowerCase();
+    const nomeArquivo = nomeCliente ? `relatorio_pagamento_${nomeCliente}.pdf` : 'relatorio_pagamento.pdf';
+
+    doc.save(nomeArquivo);
+});
+</script>
+
 </body>
+
 </html>

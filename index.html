@@ -141,6 +141,7 @@
 }
 
   </style>
+ 
 </head>
 
 <body>
@@ -190,7 +191,7 @@
   <form id="formulario" method="POST" action="#" onsubmit="return false;">
     <h2 id="tituloCampo">Reserva</h2>
 
-  <input type="date" id="data" name="data" required />
+  <input type="date" id="data" name="data" placeholder="ponga aquí la fecha" required />
 
   <select id="hora" name="hora" required>
 
@@ -255,19 +256,48 @@
       required
     />
 
+
+    <datalist id="codigosMundo">
+  <option value="+1"></option>
+  <option value="+7"></option>
+  <option value="+20"></option>
+  <option value="+27"></option>
+  <option value="+30"></option>
+  <option value="+31"></option>
+  <option value="+32"></option>
+  <option value="+33"></option>
+  <option value="+34"></option>
+  <option value="+39"></option>
+  <option value="+40"></option>
+  <option value="+41"></option>
+  <option value="+44"></option>
+  <option value="+49"></option>
+  <option value="+51"></option>
+  <option value="+52"></option>
+  <option value="+53"></option>
+  <option value="+54"></option>
+  <option value="+55"></option>
+  <option value="+56"></option>
+  <option value="+57"></option>
+  <option value="+58"></option>
+  <option value="+591"></option>
+</datalist>
+
     <input
-      type="text"
-      id="whatsapp"
-      name="whatsapp"
-      placeholder="Número de WhatsApp (ej. +59170123456)"
-      required
-    />
+  type="text"
+  id="codigo"
+  name="codigo"
+  placeholder="Código del país (ej. +591)"
+  list="codigosMundo"
+  required
+/>
 
     <input
       type="email"
       id="email"
       name="email"
-      placeholder="Correo electrónico"
+      placeholder="Correo electrónico (opcional)"
+      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
       required
     />
 
@@ -404,7 +434,7 @@ const email = document.getElementById('email').value;
 
     
     // Validar que todos os campos estão preenchidos
-if (!data || !hora || !duracion || !cliente || !valor || !whatsapp || !email) {
+if (!data || !hora || !duracion || !cliente || !valor || !whatsapp) {
     alert('¡Rellena todos los campos!');
     return;
 }
@@ -427,6 +457,7 @@ formData.append("email", email);
     method: "POST",
     body: formData,
 })
+
 .then(response => {
     if (!response.ok) {
         throw new Error('Erro na resposta do servidor');
@@ -531,7 +562,7 @@ function fecharFormulario() {
     const whatsapp = document.getElementById('whatsapp').value;
     const email = document.getElementById('email').value;
 
-    if (!data || !hora || !duracao || !cliente || !valor || !whatsapp || !email) {
+    if (!data || !hora || !duracao || !cliente || !valor || !whatsapp) {
       alert('¡Rellená todos los campos!');
       return;
     }
@@ -550,6 +581,7 @@ function fecharFormulario() {
       method: 'POST',
       body: formData,
     })
+    
       .then((res) => res.json())
       .then((resultado) => {
         if (resultado.status === 'sucesso') {
@@ -571,6 +603,7 @@ function fecharFormulario() {
         alert('❌ Error al registrar la reserva.');
         console.error('Error en el fetch:', error);
       });
+      
   }
 
   // Iniciar mapa Leaflet (ejemplo simple)
