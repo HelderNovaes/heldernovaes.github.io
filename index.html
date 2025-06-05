@@ -283,14 +283,44 @@
   <option value="+591"></option>
 </datalist>
 
+   <div style="display: flex; gap: 5px;">
+    <select id="codigoPais" style="width: 90px;" required>
+      <option value="+591" selected>+591</option>
+      <option value="+1">+1</option>
+      <option value="+7">+7</option>
+      <option value="+20">+20</option>
+      <option value="+27">+27</option>
+      <option value="+30">+30</option>
+      <option value="+31">+31</option>
+      <option value="+32">+32</option>
+      <option value="+33">+33</option>
+      <option value="+34">+34</option>
+      <option value="+39">+39</option>
+      <option value="+40">+40</option>
+      <option value="+41">+41</option>
+      <option value="+44">+44</option>
+      <option value="+49">+49</option>
+      <option value="+51">+51</option>
+      <option value="+52">+52</option>
+      <option value="+53">+53</option>
+      <option value="+54">+54</option>
+      <option value="+55">+55</option>
+      <option value="+56">+56</option>
+      <option value="+57">+57</option>
+      <option value="+58">+58</option>
+    </select>
+
     <input
-  type="text"
-  id="codigo"
-  name="codigo"
-  placeholder="Código del país (ej. +591)"
-  list="codigosMundo"
-  required
-/>
+      type="text"
+      id="numeroLocal"
+      name="numeroLocal"
+      placeholder="Número"
+      pattern="\d+"
+      required
+      style="flex: 1;"
+    />
+  </div>
+
 
     <input
       type="email"
@@ -615,7 +645,19 @@ function fecharFormulario() {
 
   // Aquí podés agregar marcadores, etc.
 </script>
- 
+ <script>
+    document.getElementById('numeroLocal').addEventListener('input', atualizarNumeroCompleto);
+    document.getElementById('codigoPais').addEventListener('change', atualizarNumeroCompleto);
+
+    function atualizarNumeroCompleto() {
+      const codigo = document.getElementById('codigoPais').value;
+      const numero = document.getElementById('numeroLocal').value;
+      document.getElementById('whatsapp').value = codigo + numero;
+    }
+  </script>
+
+  <!-- Campo oculto para armazenar o número completo -->
+  <input type="hidden" id="whatsapp" name="whatsapp" />
 
   </body>
 </html>
