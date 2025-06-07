@@ -69,6 +69,23 @@ if (isset($_GET['busca']) && trim($_GET['busca']) !== '') {
             background: #f9f9f9;
             color: #333;
         }
+        .boton-superior {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    z-index: 1000;
+  }
+
+  .boton-superior:hover {
+    background-color: #0056b3;
+  }
 button[type="submit"] {
     padding: 12px 20px;
     background-color: #3498db;
@@ -412,7 +429,23 @@ tr.fade-out {
         width: 100%;
         max-width: 300px;
     }
+    
+    .boton-superior {
+      padding: 8px 12px;
+      font-size: 13px;
+      top: 12px;
+      right: 12px;
+    }
+  
 }
+@media (max-width: 600px) {
+    .boton-superior {
+      padding: 6px 10px;
+      font-size: 12px;
+      top: 10px;
+      right: 10px;
+    }
+  }
 .dataTables_filter {
     display: flex;
     align-items: center;
@@ -440,6 +473,7 @@ tr.fade-out {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
 <body>
+<a href="editar_canchas.php" class="boton-superior">⚙️ Editar precios</a>
 
     <h1>Panel de Administración - Reservas</h1>
 
@@ -491,7 +525,11 @@ tr.fade-out {
                     <td data-label="Duración"><?= htmlspecialchars($row['duracion']) ?>h</td>
                     <td data-label="Cliente"><?= htmlspecialchars($row['cliente']) ?></td>
                     <td data-label="WhatsApp">
-                        <a href="https://wa.me/<?= preg_replace('/\D/', '', $row['whatsapp']) ?>" target="_blank">
+                        <?php
+                        $numero = preg_replace('/\D/', '', $row['whatsapp']);
+                        $mensagem = urlencode("/ReservasPentagol");
+                        ?>
+                        <a href="https://wa.me/<?= $numero ?>?text=<?= $mensagem ?>" target="_blank">
                             <?= htmlspecialchars($row['whatsapp']) ?>
                         </a>
                     </td>
@@ -609,7 +647,7 @@ document.getElementById('btnRelatorio').addEventListener('click', function () {
     const doc = new jsPDF('p', 'mm', 'a4');
 
     doc.setFontSize(11);
-    doc.text("Relatório de Reservas - Folha de Pagamento", 14, 15);
+    doc.text("Informe de Reservas - Hoja de Pago", 14, 15);
 
     const data = [];
     const headers = [];

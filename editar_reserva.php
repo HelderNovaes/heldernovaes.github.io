@@ -12,45 +12,71 @@ $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if ($id <= 0) {
     die("ID inválido.");
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cancha = $_POST['cancha'];
     $fecha = $_POST['fecha'];
     $hora = $_POST['hora'];
-    $duracion = intval($_POST['duracion']);
+   $valor     = isset($_POST['valor']) ? (float) str_replace(' Bs', '', trim($_POST['valor'])) : 0;
+$duracion  = isset($_POST['duracion']) ? (float) $_POST['duracion'] : 0;
+
     $cliente = $_POST['cliente'];
     $whatsapp = $_POST['whatsapp'];
     $email = $_POST['email'];
 
-    // Verificar conflito de horário
-    $stmt = $conexao->prepare("
-        SELECT * FROM reservas 
-        WHERE cancha = ? AND fecha = ? 
-        AND hora = ? AND id != ?
-    ");
-    $stmt->bind_param("sssi", $cancha, $fecha, $hora, $id);
+    // Buscar dados atuais do banco
+    $stmt = $conexao->prepare("SELECT * FROM reservas WHERE id = ?");
+    $stmt->bind_param("i", $id);
     $stmt->execute();
-    $conflito = $stmt->get_result()->fetch_assoc();
+    $reserva_atual = $stmt->get_result()->fetch_assoc();
     $stmt->close();
 
-    if ($conflito) {
-        $erro = "Já existe uma reserva para essa cancha, data e hora.";
+    if (!$reserva_atual) {
+        die("Reserva no encontrada.");
+    }
+
+    // Se todos os campos forem iguais, não atualizar
+    if (
+        $reserva_atual['cancha'] === $cancha &&
+        $reserva_atual['fecha'] === $fecha &&
+        $reserva_atual['hora'] === $hora &&
+        floatval($reserva_atual['valor_total']) === floatval($valor) &&
+        $reserva_atual['cliente'] === $cliente &&
+        $reserva_atual['whatsapp'] === $whatsapp &&
+        $reserva_atual['email'] === $email
+    ) {
+        $erro = "No se realizaron cambios en la reserva.";
     } else {
+        // Verificar conflito com outra reserva
         $stmt = $conexao->prepare("
-            UPDATE reservas 
-            SET cancha=?, fecha=?, hora=?, duracion=?, cliente=?, whatsapp=?, email=?
-            WHERE id=?
+            SELECT * FROM reservas 
+            WHERE cancha = ? AND fecha = ? 
+            AND hora = ? AND id != ?
         ");
-        $stmt->bind_param("sssisssi", $cancha, $fecha, $hora, $duracion, $cliente, $whatsapp, $email, $id);
-        if ($stmt->execute()) {
-            header("Location: admin.php?editado=1");
-            exit();
-        } else {
-            $erro = "Erro ao atualizar a reserva.";
-        }
+        $stmt->bind_param("sssd", $cancha, $fecha, $hora, $duracao);
+        $stmt->execute();
+        $conflito = $stmt->get_result()->fetch_assoc();
         $stmt->close();
+
+        if ($conflito) {
+            $erro = "Ya existe una reserva para esta cancha, fecha y hora.";
+        } else {
+            $stmt = $conexao->prepare("
+                UPDATE reservas 
+                SET cancha=?, fecha=?, hora=?, duracion=?, cliente=?, whatsapp=?, email=?
+                WHERE id=?
+            ");
+          $stmt->bind_param("sssdsssi", $cancha, $fecha, $hora, $duracion, $cliente, $whatsapp, $email, $id);
+            if ($stmt->execute()) {
+                header("Location: admin.php?editado=1");
+                exit();
+            } else {
+                $erro = "Error al actualizar la reserva.";
+            }
+            $stmt->close();
+        }
     }
 }
+
 
 // Carregar dados da reserva
 $stmt = $conexao->prepare("SELECT * FROM reservas WHERE id=?");
@@ -61,7 +87,7 @@ $reserva = $res->fetch_assoc();
 $stmt->close();
 
 if (!$reserva) {
-    die("Reserva não encontrada.");
+    die("Reserva no encontrada");
 }
 ?>
 
@@ -69,6 +95,9 @@ if (!$reserva) {
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <title>Editar Reserva</title>
     <style>
         body {
@@ -156,9 +185,9 @@ if (!$reserva) {
             <input type="time" name="hora" value="<?= htmlspecialchars($reserva['hora']) ?>" required>
         </label>
 
-        <label>Duração (horas):
-            <input type="number" name="duracion" value="<?= htmlspecialchars($reserva['duracion']) ?>" min="1" required>
-        </label>
+        <label>Duración (horas):
+        <input type="number" name="duracion" value="<?= htmlspecialchars($reserva['duracion']) ?>" min="0.5" step="0.5" required>
+   </label>
 
         <label>Cliente:
             <input type="text" name="cliente" value="<?= htmlspecialchars($reserva['cliente']) ?>" required>
@@ -172,7 +201,7 @@ if (!$reserva) {
             <input type="email" name="email" value="<?= htmlspecialchars($reserva['email']) ?>" required>
         </label>
 
-        <button type="submit">Salvar</button>
+        <button type="submit">Guardar</button>
     </form>
 </div>
 

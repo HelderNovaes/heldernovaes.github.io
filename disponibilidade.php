@@ -19,13 +19,12 @@ $ocupados = [];
 
 while ($row = $result->fetch_assoc()) {
     $horaInicio = strtotime($data . ' ' . $row['hora']);
-    $duracao = (int)$row['duracion'];
-
-    // Adiciona 30min para cada meia hora de duração
-    $totalIntervalos = $duracao * 2;
+    $duracao = (float) $row['duracion']; // Lê como decimal do banco de dados
+    $duracao = max($duracao, 0.25); // Garante que a duração mínima seja de 15 minutos
+    $totalIntervalos = intval($duracao * 60 / 15); // Total de blocos de 15 min
 
     for ($i = 0; $i < $totalIntervalos; $i++) {
-        $horaOcupada = date('H:i', strtotime("+".($i * 30)." minutes", $horaInicio));
+        $horaOcupada = date('H:i', strtotime("+".($i * 15)." minutes", $horaInicio));
         $ocupados[] = $horaOcupada;
     }
 }

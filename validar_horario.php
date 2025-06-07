@@ -1,23 +1,35 @@
 <?php
 // validar_horario.php
-include 'conexao.php';  // Ajusta la conexión
+include 'conexao.php';
+header('Content-Type: application/json');
 
-$cancha = $_POST['cancha'] ?? '';
-$data = $_POST['data'] ?? '';
-$hora = $_POST['hora'] ?? '';
-$duracao = isset($_POST['duracao']) ? (int)$_POST['duracao'] : 0;
-
+// Validar e capturar dados
+$cancha   = isset($_POST['cancha']) ? trim($_POST['cancha']) : '';
+$data     = isset($_POST['data']) ? trim($_POST['data']) : '';
+$hora     = isset($_POST['hora']) ? trim($_POST['hora']) : '';
+$duracao = isset($_POST['duracao']) ? round((float) $_POST['duracao'], 2) : 0.00;
 if (!$cancha || !$data || !$hora || !$duracao) {
-    echo json_encode(['disponible' => false, 'mensaje' => 'Faltan parámetros']);
+    echo json_encode([
+        'disponible' => false,
+        'mensaje' => '❌ Faltan parámetros requeridos.'
+    ]);
     exit;
 }
 
-// Convertir a timestamp para comparar
+// Convertir a timestamps
 $inicioNueva = strtotime("$data $hora");
-$fimNueva = strtotime("+$duracao hour", $inicioNueva);
+$fimNueva = $inicioNueva + ($duracao * 3600);
 
-// Consulta reservas existentes para esa cancha y fecha
+// Buscar reservas existentes
 $stmt = $conexao->prepare("SELECT hora, duracion FROM reservas WHERE cancha = ? AND fecha = ?");
+if (!$stmt) {
+    echo json_encode([
+        'disponible' => false,
+        'mensaje' => '❌ Error de consulta: ' . $conexao->error
+    ]);
+    exit;
+}
+
 $stmt->bind_param("ss", $cancha, $data);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -26,18 +38,26 @@ $conflito = false;
 
 while ($row = $result->fetch_assoc()) {
     $inicioExistente = strtotime("$data " . $row['hora']);
-    $fimExistente = strtotime("+{$row['duracion']} hour", $inicioExistente);
+    $fimExistente = $inicioExistente + ($row['duracion'] * 3600);
 
-    // Verificar si hay superposición
+    // Verificar sobreposição
     if (($inicioNueva < $fimExistente) && ($fimNueva > $inicioExistente)) {
         $conflito = true;
         break;
     }
 }
 
+$stmt->close();
+
 if ($conflito) {
-    echo json_encode(['disponible' => false, 'mensaje' => 'Horario no disponible.']);
+    echo json_encode([
+        'disponible' => false,
+        'mensaje' => '❌ Horario no disponible.'
+    ]);
 } else {
-    echo json_encode(['disponible' => true, 'mensaje' => 'Horario disponible.']);
+    echo json_encode([
+        'disponible' => true,
+        'mensaje' => '✅ Horario disponible.'
+    ]);
 }
 ?>

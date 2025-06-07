@@ -5,14 +5,17 @@ include 'conexao.php';
 $cancha   = isset($_POST['cancha']) ? $conexao->real_escape_string(trim($_POST['cancha'])) : '';
 $data     = isset($_POST['data']) ? $conexao->real_escape_string(trim($_POST['data'])) : '';
 $hora     = isset($_POST['hora']) ? $conexao->real_escape_string(trim($_POST['hora'])) : '';
-$duracao  = isset($_POST['duracao']) ? (int) $_POST['duracao'] : 0;
+$duracao  = isset($_POST['duracao']) ? floatval($_POST['duracao']) : 0;
 $cliente  = isset($_POST['cliente']) ? $conexao->real_escape_string(trim($_POST['cliente'])) : '';
-$valor    = isset($_POST['valor']) ? (float) $_POST['valor'] : 0;
+$valor    = isset($_POST['valor']) ? floatval($_POST['valor']) : 0;
 $whatsapp = isset($_POST['whatsapp']) ? $conexao->real_escape_string(trim($_POST['whatsapp'])) : '';
 $email    = isset($_POST['email']) ? $conexao->real_escape_string(trim($_POST['email'])) : '';
 
-// Validar si los campos obligatorios fueron llenados
-if (!$cancha || !$data || !$hora || !$duracao || !$cliente || !$valor || !$whatsapp) {
+// Logs de debug (apagam depois de testar)
+error_log("📥 RECEBIDO: cancha=$cancha, data=$data, hora=$hora, duracao=$duracao, cliente=$cliente, valor=$valor, whatsapp=$whatsapp, email=$email");
+
+// Validação de campos obrigatórios (corrigido para permitir valores float como 1.5)
+if (empty($cancha) || empty($data) || empty($hora) || $duracao <= 0 || empty($cliente) || $valor <= 0 || empty($whatsapp)) {
     echo json_encode([
         'status' => 'error',
         'mensagem' => '❌ Llena todos los campos obligatorios.',
@@ -63,7 +66,7 @@ if (!$stmt) {
     exit;
 }
 
-$stmt->bind_param("sssisdss", $cancha, $data, $hora, $duracao, $cliente, $valor, $whatsapp, $email);
+$stmt->bind_param("sssdsdss", $cancha, $data, $hora, $duracao, $cliente, $valor, $whatsapp, $email);
 
 if ($stmt->execute()) {
     // Envío de correo electrónico

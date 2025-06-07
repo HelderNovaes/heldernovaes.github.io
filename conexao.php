@@ -4,15 +4,15 @@ $usuario = "if0_39089337";
 $senha = "HSNS2017";
 $banco = "if0_39089337_pentagol";
 
-$servidor = "localhost";
-$usuario = "root";
-$senha = "";
-$banco = "pentagol";
 $conexao = new mysqli($servidor, $usuario, $senha, $banco);
+
+// Adicionado para compatibilidade com mysqli_query($conn, ...)
+$conn = $conexao;
 
 if ($conexao->connect_error) {
     die("Erro na conexão: " . $conexao->connect_error);
 }
+
 // Define o charset para evitar problemas com caracteres especiais$busca = '';
 if (isset($_GET['busca']) && !empty(trim($_GET['busca']))) {
     $busca = trim($_GET['busca']);
@@ -29,5 +29,4 @@ if (isset($_GET['busca']) && !empty(trim($_GET['busca']))) {
 } else {
     $resultado = $conexao->query("SELECT * FROM reservas ORDER BY fecha DESC, hora DESC");
 }
-
 ?>
