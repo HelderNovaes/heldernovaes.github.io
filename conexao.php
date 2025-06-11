@@ -1,19 +1,23 @@
 <?php
-$servidor = "sql110.infinityfree.com";
-$usuario = "if0_39089337";
-$senha = "HSNS2017";
-$banco = "if0_39089337_pentagol";
+// Dados reais do banco na Hostinger
+$servidor = "localhost";
+$usuario = "u359778512_HelderNovaes";
+$senha = "HSNS2017.n";
+$banco = "u359778512_pentagol";
 
+// Conexão
 $conexao = new mysqli($servidor, $usuario, $senha, $banco);
 
-// Adicionado para compatibilidade com mysqli_query($conn, ...)
-$conn = $conexao;
-
+// Verifica erro de conexão
 if ($conexao->connect_error) {
     die("Erro na conexão: " . $conexao->connect_error);
 }
 
-// Define o charset para evitar problemas com caracteres especiais$busca = '';
+// Define charset para UTF-8
+$conexao->set_charset("utf8");
+
+// Busca (opcional, via GET)
+$busca = '';
 if (isset($_GET['busca']) && !empty(trim($_GET['busca']))) {
     $busca = trim($_GET['busca']);
     $busca_sql = "%$busca%";

@@ -2,7 +2,8 @@
 include 'conexao.php'; // ajuste o caminho se necessário
 
 $sql = "SELECT * FROM canchas";
-$result = mysqli_query($conn, $sql);
+$result = mysqli_query($conexao, $sql);
+
 ?>
 
 <!DOCTYPE html>

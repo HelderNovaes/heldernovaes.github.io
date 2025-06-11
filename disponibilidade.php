@@ -1,5 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 header('Content-Type: application/json');
+
 include 'conexao.php';
 
 $cancha = $_GET['cancha'] ?? '';
@@ -10,24 +13,30 @@ if (!$cancha || !$data) {
     exit;
 }
 
-$stmt = $conexao->prepare("SELECT hora, duracion FROM reservas WHERE cancha = ? AND fecha = ?");
-$stmt->bind_param("ss", $cancha, $data);
-$stmt->execute();
-$result = $stmt->get_result();
+try {
+    $stmt = $conexao->prepare("SELECT hora, duracion, cliente, whatsapp, cancha FROM reservas WHERE cancha = ? AND fecha = ?");
+    $stmt->bind_param("ss", $cancha, $data);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-$ocupados = [];
+    $reservas = [];
 
-while ($row = $result->fetch_assoc()) {
-    $horaInicio = strtotime($data . ' ' . $row['hora']);
-    $duracao = (float) $row['duracion']; // Lê como decimal do banco de dados
-    $duracao = max($duracao, 0.25); // Garante que a duração mínima seja de 15 minutos
-    $totalIntervalos = intval($duracao * 60 / 15); // Total de blocos de 15 min
+    while ($row = $result->fetch_assoc()) {
+        $inicio = strtotime($data . ' ' . $row['hora']);
+        $duracao = (float) $row['duracion'];
+        $fim = strtotime("+".($duracao * 60)." minutes", $inicio);
 
-    for ($i = 0; $i < $totalIntervalos; $i++) {
-        $horaOcupada = date('H:i', strtotime("+".($i * 15)." minutes", $horaInicio));
-        $ocupados[] = $horaOcupada;
+        $reservas[] = [
+            'hora_inicio' => date('H:i', $inicio),
+            'hora_fim' => date('H:i', $fim),
+            'nombre' => $row['cliente'],
+            'telefono' => $row['whatsapp'],
+            'cancha' => $row['cancha']
+        ];
     }
-}
 
-echo json_encode($ocupados);
-?>
+    echo json_encode($reservas);
+
+} catch (Exception $e) {
+    echo json_encode(['error' => 'Erro no servidor.', 'detalhes' => $e->getMessage()]);
+}

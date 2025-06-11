@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,55 +7,108 @@
   <title>Horarios Disponibles</title>
   <link rel="stylesheet" href="disponivel.css">
   <style>
-    body { font-family: sans-serif; padding: 20px;
-      background: #00f7ff; }
-    .horarios { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
-    .horario { padding: 10px 15px; background: #4caf50; color: white; border-radius: 6px; cursor: pointer; }
-    .horario.ocupado { background: #ccc; cursor: not-allowed; text-decoration: line-through; }
-    /* Container principal */
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #00f7ff;
+    }
 
-/* Labels e campos */
+    h2 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
 
+    label {
+      margin-right: 20px;
+      font-weight: bold;
+    }
 
+    input[type="date"], select {
+      padding: 5px;
+      margin-left: 8px;
+    }
 
+    button {
+      padding: 6px 12px;
+      background: #007acc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-/* Container de horários */
+    .horarios {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
 
-/* Responsividade */
-@media (max-width: 600px) {
-  .form-container {
-    margin: 20px 10px;
-    padding: 15px;
-  }
+    .horario {
+      padding: 10px 15px;
+      background: #4caf50;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
 
-  #horariosContainer {
-    flex-direction: column;
-    align-items: center;
-  }
+    .horario.ocupado {
+      background: #ccc;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
 
-  .horarios .horario {
-    width: 80%;
-  }
-}
+    .resumo-ocupado {
+      background-color: #fff3f3;
+      padding: 8px 12px;
+      border-left: 5px solid #d00;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #800;
+    }
 
+    @media (max-width: 600px) {
+      .form-container {
+        margin: 20px 10px;
+        padding: 15px;
+      }
+
+      #horariosContainer {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .horarios .horario {
+        width: 80%;
+      }
+    }
   </style>
 </head>
 <body>
   <h2>Ver Horarios Disponibles</h2>
+
   <label>Cancha:
-   <select id="cancha" name="cancha" required>
+    <select id="cancha" name="cancha" required>
       <option value="Cancha 1">Cancha 1</option>
       <option value="Cancha 2">Cancha 2</option>
       <option value="Cancha 3">Cancha 3</option>
       <option value="Cancha 4">Cancha 4</option>
     </select>
   </label>
-  <label>Data:
+
+  <label>Fecha:
     <input type="date" id="data" />
   </label>
+
   <button onclick="carregarHorarios()">Revisar</button>
+
   <h2 id="tituloHorarios">Horarios Disponibles</h2>
-<div id="horariosContainer"></div>
+
+  <!-- Resumos dos horários ocupados -->
+  <div id="resumosOcupados"></div>
+
+  <!-- Grid de horários disponíveis -->
   <div class="horarios" id="listaHorarios"></div>
 
   <script src="disponivel.js"></script>

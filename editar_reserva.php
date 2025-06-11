@@ -47,35 +47,23 @@ $duracion  = isset($_POST['duracion']) ? (float) $_POST['duracion'] : 0;
         $erro = "No se realizaron cambios en la reserva.";
     } else {
         // Verificar conflito com outra reserva
-        $stmt = $conexao->prepare("
-            SELECT * FROM reservas 
-            WHERE cancha = ? AND fecha = ? 
-            AND hora = ? AND id != ?
-        ");
-        $stmt->bind_param("sssd", $cancha, $fecha, $hora, $duracao);
-        $stmt->execute();
-        $conflito = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
+$stmt = $conexao->prepare("
+    UPDATE reservas 
+    SET cancha=?, fecha=?, hora=?, duracion=?, valor_total=?, cliente=?, whatsapp=?, email=?
+    WHERE id=?
+");
+$stmt->bind_param("sssdssssi", $cancha, $fecha, $hora, $duracion, $valor, $cliente, $whatsapp, $email, $id);
 
-        if ($conflito) {
-            $erro = "Ya existe una reserva para esta cancha, fecha y hora.";
-        } else {
-            $stmt = $conexao->prepare("
-                UPDATE reservas 
-                SET cancha=?, fecha=?, hora=?, duracion=?, cliente=?, whatsapp=?, email=?
-                WHERE id=?
-            ");
-          $stmt->bind_param("sssdsssi", $cancha, $fecha, $hora, $duracion, $cliente, $whatsapp, $email, $id);
-            if ($stmt->execute()) {
-                header("Location: admin.php?editado=1");
-                exit();
-            } else {
-                $erro = "Error al actualizar la reserva.";
-            }
-            $stmt->close();
+if ($stmt->execute()) {
+    header("Location: admin.php?editado=1");
+    exit();
+} else {
+    $erro = "Error al actualizar la reserva.";
+}
+$stmt->close();
         }
     }
-}
+
 
 
 // Carregar dados da reserva
@@ -201,6 +189,9 @@ if (!$reserva) {
             <input type="email" name="email" value="<?= htmlspecialchars($reserva['email']) ?>" required>
         </label>
 
+        <label>Valor (Bs):
+        <input type="text" name="valor" value="<?= htmlspecialchars($reserva['valor_total']) ?>" required>
+        </label>
         <button type="submit">Guardar</button>
     </form>
 </div>

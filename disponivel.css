@@ -6,6 +6,15 @@
       max-width: 900px;
       margin: auto;
     }
+.resumo-ocupado {
+  background-color: #fff3f3;
+  padding: 8px 12px;
+  border-left: 5px solid #d00;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #800;
+}
 
     h2 {
       text-align: center;
