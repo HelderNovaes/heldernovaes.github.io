@@ -1,13 +1,17 @@
 <?php
 // Dados reais do banco na Hostinger
+//$servidor = "localhost";
+//$usuario = "u359778512_HelderNovaes";
+//$senha = "HSNS2017.n";
+//$banco = "u359778512_pentagol";
 $servidor = "localhost";
-$usuario = "u359778512_HelderNovaes";
-$senha = "HSNS2017.n";
-$banco = "u359778512_pentagol";
+$usuario = "root";
+$senha = "";
+$banco = "pentagol"; // substitua pelo nome do seu banco de dados local
 
 // Conexão
+//$conexao = new mysqli($servidor, $usuario, $senha, $banco);
 $conexao = new mysqli($servidor, $usuario, $senha, $banco);
-
 // Verifica erro de conexão
 if ($conexao->connect_error) {
     die("Erro na conexão: " . $conexao->connect_error);

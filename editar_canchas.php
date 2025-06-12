@@ -104,7 +104,7 @@ $result = mysqli_query($conexao, $sql);
   </style>
 </head>
 <body>
-  <h2 style="text-align:center;">Editar preços das canchas</h2>
+  <h2 style="text-align:center;">Editar precios de las canchas</h2>
   <form action="salvar_canchas.php" method="POST">
     <table>
       <tr><th>Cancha</th><th>Preço por Hora (Bs)</th></tr>
@@ -118,7 +118,7 @@ $result = mysqli_query($conexao, $sql);
       <?php endwhile; ?>
     </table>
     <div style="text-align:center;">
-      <button type="submit">Salvar Cambios</button>
+      <button type="submit">Guardar Cambios</button>
     </div>
   </form>
 </body>

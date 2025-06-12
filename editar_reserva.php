@@ -17,7 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $fecha = $_POST['fecha'];
     $hora = $_POST['hora'];
    $valor     = isset($_POST['valor']) ? (float) str_replace(' Bs', '', trim($_POST['valor'])) : 0;
-$duracion  = isset($_POST['duracion']) ? (float) $_POST['duracion'] : 0;
+$duracion = isset($_POST['duracion']) ? (float) str_replace(',', '.', $_POST['duracion']) : 0;
+    if ($duracion <= 0) {
+        $erro = "A duração deve ser maior que zero.";
+    }
 
     $cliente = $_POST['cliente'];
     $whatsapp = $_POST['whatsapp'];
@@ -36,16 +39,19 @@ $duracion  = isset($_POST['duracion']) ? (float) $_POST['duracion'] : 0;
 
     // Se todos os campos forem iguais, não atualizar
     if (
-        $reserva_atual['cancha'] === $cancha &&
-        $reserva_atual['fecha'] === $fecha &&
-        $reserva_atual['hora'] === $hora &&
-        floatval($reserva_atual['valor_total']) === floatval($valor) &&
-        $reserva_atual['cliente'] === $cliente &&
-        $reserva_atual['whatsapp'] === $whatsapp &&
-        $reserva_atual['email'] === $email
-    ) {
-        $erro = "No se realizaron cambios en la reserva.";
-    } else {
+    $reserva_atual['cancha'] === $cancha &&
+    $reserva_atual['fecha'] === $fecha &&
+    $reserva_atual['hora'] === $hora &&
+    floatval($reserva_atual['duracion']) === floatval($duracion) &&
+    floatval($reserva_atual['valor_total']) === floatval($valor) &&
+    $reserva_atual['cliente'] === $cliente &&
+    $reserva_atual['whatsapp'] === $whatsapp &&
+    $reserva_atual['email'] === $email
+) {
+    // Mesmo sem alteração, redireciona como se tivesse salvado
+    header("Location: admin.php?editado=1");
+    exit();
+} else {
         // Verificar conflito com outra reserva
 $stmt = $conexao->prepare("
     UPDATE reservas 
@@ -173,9 +179,12 @@ if (!$reserva) {
             <input type="time" name="hora" value="<?= htmlspecialchars($reserva['hora']) ?>" required>
         </label>
 
-        <label>Duración (horas):
-        <input type="number" name="duracion" value="<?= htmlspecialchars($reserva['duracion']) ?>" min="0.5" step="0.5" required>
-   </label>
+        <input type="number" name="duracion" 
+       value="<?= htmlspecialchars($reserva['duracion']) ?>" 
+       min="0.25" step="0.01" required>
+
+</label>
+
 
         <label>Cliente:
             <input type="text" name="cliente" value="<?= htmlspecialchars($reserva['cliente']) ?>" required>

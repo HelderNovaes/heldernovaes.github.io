@@ -13,9 +13,8 @@ todosHorarios.push('00:00');
 function carregarHorarios() {
   const cancha = document.getElementById('cancha').value;
   const data = document.getElementById('data').value;
- const lista = document.getElementById('listaHorarios');
-const resumos = document.getElementById('resumosOcupados'); // novo container para os resumos
-
+  const lista = document.getElementById('listaHorarios');
+  const resumos = document.getElementById('resumosOcupados');
 
   if (!cancha || !data) {
     alert('Elegí la cancha y la fecha.');
@@ -27,6 +26,7 @@ const resumos = document.getElementById('resumosOcupados'); // novo container pa
     .then(reservas => {
       console.log("Reservas recebidas:", reservas);
       lista.innerHTML = '';
+      resumos.innerHTML = ''; // ✅ Limpa os resumos antes de adicionar novos
       const horariosOcupados = new Set();
 
       if (!Array.isArray(reservas)) {
@@ -41,21 +41,20 @@ const resumos = document.getElementById('resumosOcupados'); // novo container pa
         }
 
         // Cria visual de resumo do horário ocupado
-       const resumo = document.createElement('p');
-resumo.className = 'resumo-ocupado';
+        const resumo = document.createElement('p');
+        resumo.className = 'resumo-ocupado';
 
-const linkTelefone = document.createElement('a');
-linkTelefone.href = `tel:${res.telefono}`;
-linkTelefone.textContent = res.telefono;
-linkTelefone.style.color = '#007acc';
-linkTelefone.style.textDecoration = 'underline';
+        const linkTelefone = document.createElement('a');
+        linkTelefone.href = `tel:${res.telefono}`;
+        linkTelefone.textContent = res.telefono;
+        linkTelefone.style.color = '#007acc';
+        linkTelefone.style.textDecoration = 'underline';
 
-resumo.innerHTML = `⛔ Horario ocupado de <strong>${res.hora_inicio}</strong> a <strong>${res.hora_fim}</strong> — <strong>${res.nombre}</strong>, 📞 `;
-resumo.appendChild(linkTelefone);
-resumo.innerHTML += `, ${res.cancha}`;
+        resumo.innerHTML = `⛔ Horario ocupado de <strong>${res.hora_inicio}</strong> a <strong>${res.hora_fim}</strong> — <strong>${res.nombre}</strong>, 📞 `;
+        resumo.appendChild(linkTelefone);
+        resumo.innerHTML += `, ${res.cancha}`;
 
-resumos.appendChild(resumo);
-
+        resumos.appendChild(resumo);
 
         // Marca os blocos ocupados de 15 em 15 minutos
         let inicio = new Date(`1970-01-01T${res.hora_inicio}:00`);

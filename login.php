@@ -6,7 +6,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha = $_POST['senha'];
 
     $usuarioAdmin = 'admin';
-    $senhaAdmin = '1234';
+    $senhaAdmin = '2023Pentagol';
 
     if ($usuario === $usuarioAdmin && $senha === $senhaAdmin) {
         $_SESSION['admin_logado'] = true;
