@@ -82,6 +82,32 @@ if (isset($_GET['busca']) && trim($_GET['busca']) !== '') {
     transition: background 0.3s ease;
     z-index: 1000;
   }
+.btn-excluir-tudo {
+    background-color: #e53935;   /* Vermelho forte */
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    box-shadow: 0 4px 8px rgba(229, 57, 53, 0.3);
+    margin-top: 10px;
+    display: inline-block;
+    text-decoration: none;
+    position: relative;
+
+}
+
+.btn-excluir-tudo:hover {
+    background-color: #c62828;  /* Vermelho escuro no hover */
+    transform: scale(1.02);
+}
+
+.btn-excluir-tudo:active {
+    transform: scale(0.98);
+}
 
   .boton-superior:hover {
     background-color: #0056b3;
@@ -496,6 +522,8 @@ tr.fade-out {
         <label for="horaFiltro">Filtrar por Hora:</label>
         <input type="text" id="horaFiltro" placeholder="HH:MM">
         <button id="btnRelatorio" class="btn btn-info">📄 Generar informe</button>
+       
+
 
     </div>
 
@@ -546,6 +574,9 @@ tr.fade-out {
             <?php endwhile; ?>
         </tbody>
     </table>
+<div id="totalGanho" style="margin-top: 10px; font-weight: bold; font-size: 16px;"></div>
+ <button class="btn-excluir-tudo" onclick="eliminarTodas()">🗑️ Eliminar todas las reservas</button>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/i18n/jquery-ui-i18n.min.js"></script>
 <script>
@@ -642,7 +673,7 @@ $(document).ready(function() {
 </script>
 
 <script>
-document.getElementById('btnRelatorio').addEventListener('click', function () {
+document.getElementById('btnRelatorio').addEventListener('click', function () { 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'mm', 'a4');
 
@@ -651,6 +682,7 @@ document.getElementById('btnRelatorio').addEventListener('click', function () {
 
     const data = [];
     const headers = [];
+    let totalGanho = 0;
 
     const allTh = document.querySelectorAll('#tabelaPrincipal thead th');
     for (let i = 0; i < allTh.length - 1; i++) {
@@ -663,19 +695,35 @@ document.getElementById('btnRelatorio').addEventListener('click', function () {
             const cells = node.querySelectorAll('td');
             const rowData = [];
             for (let i = 0; i < cells.length - 1; i++) {
-                rowData.push(cells[i].innerText.trim());
+                const cellText = cells[i].innerText.trim();
+                rowData.push(cellText);
+
+                // Columna "Valor Total" está en la posición 8
+                if (i === 8) {
+                    const valor = parseFloat(cellText.replace(/[^\d,]/g, '').replace(',', '.'));
+                    if (!isNaN(valor)) {
+                        totalGanho += valor;
+                    }
+                }
             }
             data.push(rowData);
         });
     });
 
+    // Mostrar total en pantalla (sin símbolos)
+    const totalElement = document.getElementById('totalGanho');
+    if (totalElement) {
+        totalElement.innerHTML = `</b>Total del mes: Bs ${totalGanho.toFixed(2).replace('.', ',')}`;
+    }
+
+    // Generar tabla PDF y agregar total limpio al final
     doc.autoTable({
         head: [headers],
         body: data,
         startY: 20,
         margin: { top: 20, left: 8, right: 8 },
         styles: {
-            fontSize: 7.5, // AUMENTADO
+            fontSize: 7.5,
             cellPadding: 1.2,
             overflow: 'linebreak',
             valign: 'middle'
@@ -689,19 +737,50 @@ document.getElementById('btnRelatorio').addEventListener('click', function () {
             5: { cellWidth: 24 },
             6: { cellWidth: 24 },
             7: { cellWidth: 28 },
-            8: { cellWidth: 16 },
-            9: { cellWidth: 22 }
+            8: { cellWidth: 20 }
         },
         tableWidth: 'wrap',
-        theme: 'grid'
+        theme: 'grid',
+        didDrawPage: function (data) {
+            const posY = data.cursor.y + 10;
+            doc.setFontSize(11);
+            doc.setTextColor(0, 0, 0);
+            doc.text(`Total del mes: Bs ${totalGanho.toFixed(2).replace('.', ',')}`, 14, posY);
+        }
     });
+
+
 
     let nomeCliente = document.querySelector('input[name="busca"]').value.trim();
     nomeCliente = nomeCliente.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '').toLowerCase();
     const nomeArquivo = nomeCliente ? `relatorio_pagamento_${nomeCliente}.pdf` : 'relatorio_pagamento.pdf';
 
     doc.save(nomeArquivo);
+    
 });
+
+
+function eliminarTodas() {
+    if (confirm('⚠️ ¿Estás seguro de que deseas eliminar TODAS las reservas? Esta acción no se puede deshacer.')) {
+        fetch('borrartodo.php', {
+            method: 'POST'
+        })
+        .then(res => res.text())
+        .then(texto => {
+            if (texto.trim() === 'ok') {
+                alert('✅ ¡Todas las reservas fueron eliminadas exitosamente!');
+                location.reload();
+            } else {
+                alert('❌ Error: ' + texto);
+            }
+        })
+        .catch(err => alert('⚠️ Error de conexión con el servidor.'));
+    } else {
+        alert('Operación cancelada.');
+    }
+}
+</script>
+
 </script>
 
 </body>

@@ -25,9 +25,13 @@ if (empty($cancha) || empty($data) || empty($hora) || $duracao <= 0 || empty($cl
 }
 
 // Verificar conflictos de horario
+// Verificar conflictos de horario
 $dataReserva = $data;
 $inicioNova = strtotime("$data $hora");
-$fimNova = strtotime("+$duracao hour", $inicioNova);
+
+// ✅ Calcular fim com minutos fracionados
+$duracaoMin = floatval($duracao) * 60;
+$fimNova = $inicioNova + ($duracaoMin * 60);
 
 $stmt = $conexao->prepare("SELECT hora, duracion FROM reservas WHERE cancha = ? AND fecha = ?");
 $stmt->bind_param("ss", $cancha, $dataReserva);
@@ -38,9 +42,13 @@ $conflito = false;
 
 while ($row = $result->fetch_assoc()) {
     $inicioExistente = strtotime("$dataReserva " . $row['hora']);
-    $fimExistente = strtotime("+{$row['duracion']} hour", $inicioExistente);
 
-    if (($inicioNova < $fimExistente) && ($fimNova > $inicioExistente)) {
+    // ✅ Considerar duração da reserva existente em minutos
+    $duracaoExistenteMin = floatval($row['duracion']) * 60;
+    $fimExistente = $inicioExistente + ($duracaoExistenteMin * 60);
+
+    // ⚠️ Verifica se há sobreposição real — encostar é permitido
+    if (!($fimNova <= $inicioExistente || $inicioNova >= $fimExistente)) {
         $conflito = true;
         break;
     }
